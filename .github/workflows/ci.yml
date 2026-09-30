@@ -1,0 +1,70 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  js:
+    name: Lint, typecheck, unit + RLS tests, build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm turbo run lint typecheck
+      - name: Unit tests and RLS policy tests (PGlite, no Docker)
+        run: pnpm turbo run test --filter=@haalo/ui-tokens --filter=@haalo/shared --filter=@haalo/db
+      - name: Web production build
+        run: pnpm --filter @haalo/web build
+      - name: Expo doctor
+        run: cd apps/mobile && npx --yes expo-doctor
+      - name: Mobile bundle (Metro resolves every screen)
+        run: cd apps/mobile && pnpm exec expo export --platform android --output-dir dist
+
+  voice:
+    name: Voice service (ruff, pytest)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: services/voice
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+      - run: uv sync --frozen
+      - run: uv run ruff check haalo_voice evals tests
+      - run: uv run pytest -q
+
+  text-evals:
+    name: Voice text simulations (go/no-go bar)
+    # Runs only when a Groq key is configured as a repo secret. Text only: no audio, no telephony.
+    if: ${{ vars.RUN_TEXT_EVALS == 'true' }}
+    needs: voice
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: services/voice
+    env:
+      GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+      GROQ_MODEL_CONVERSATION: ${{ vars.GROQ_MODEL_CONVERSATION }}
+      GROQ_MODEL_FAST: ${{ vars.GROQ_MODEL_FAST }}
+      GROQ_MODEL_SUMMARY: ${{ vars.GROQ_MODEL_SUMMARY }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+      - run: uv sync --frozen
+      - run: uv run python -m evals.run_text --ci
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: eval-report
+          path: services/voice/evals/out/

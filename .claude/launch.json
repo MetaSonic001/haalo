@@ -1,0 +1,38 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "web",
+      "runtimeExecutable": "pnpm",
+      "runtimeArgs": [
+        "--filter",
+        "@haalo/web",
+        "dev"
+      ],
+      "port": 3000
+    },
+    {
+      "name": "voice",
+      "runtimeExecutable": "pnpm",
+      "runtimeArgs": [
+        "dev:voice"
+      ],
+      "port": 7860
+    },
+    {
+      "name": "mobile-web",
+      "runtimeExecutable": "pnpm",
+      "runtimeArgs": [
+        "--filter",
+        "@haalo/mobile",
+        "exec",
+        "expo",
+        "start",
+        "--web",
+        "--port",
+        "8082"
+      ],
+      "port": 8082
+    }
+  ]
+}

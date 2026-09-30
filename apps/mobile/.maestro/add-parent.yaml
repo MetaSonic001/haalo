@@ -1,0 +1,30 @@
+# Maestro flow: add a parent through the five-step wizard and schedule the first call.
+appId: app.haalo.family
+---
+- launchApp:
+    clearState: true
+- tapOn: "Settings"
+- tapOn: "Add another parent"
+- tapOn: "Continue"
+- assertVisible: "Enter their name"
+- tapOn: "Their name"
+- inputText: "Shobha"
+- tapOn: "Aai"
+- tapOn: "Their phone number"
+- eraseText: 5
+- inputText: "+919876543210"
+- tapOn: "Continue"
+- assertVisible: "Which language do they think in?"
+- tapOn: "Continue"
+- assertVisible: "When is a good time?"
+- tapOn: "Continue"
+- assertVisible: "Any medicines to ask about?"
+- tapOn: "Medicine"
+- inputText: "BP tablet"
+- tapOn: "Add"
+- tapOn: "Continue"
+- tapOn: "Cricket"
+- tapOn: "Continue"
+- assertVisible: "Ready to schedule the first call?"
+- tapOn: "Schedule first call"
+- assertVisible: "First call scheduled for 9:00 tomorrow."

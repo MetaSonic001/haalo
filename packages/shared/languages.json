@@ -1,0 +1,944 @@
+{
+  "_comment": "Single source of truth for languages. Read by packages/shared (TS) and services/voice (Python). Providers/voices here are DEFAULT PREFERENCES only; env vars override (see .env.example). Scripted strings for non-launch languages are marked review=needs_native_review and must be checked by a native speaker before go-live.",
+  "version": 1,
+  "emergency_numbers": {
+    "IN": {
+      "emergency": "112",
+      "mental_health": "Tele-MANAS 14416 (verify before launch)"
+    }
+  },
+  "languages": [
+    {
+      "code": "mr",
+      "status": "launch",
+      "review": "needs_native_review",
+      "name": "Marathi",
+      "native_name": "मराठी",
+      "script": "Devanagari",
+      "font_family": "Anek Devanagari",
+      "stt": {
+        "whisper": "mr",
+        "sarvam": "mr-IN",
+        "bhashini": "mr"
+      },
+      "tts": {
+        "edge_voices": {
+          "female": "mr-IN-AarohiNeural",
+          "male": "mr-IN-ManoharNeural"
+        },
+        "sarvam_lang": "mr-IN",
+        "bhashini": "mr"
+      },
+      "honorifics": [
+        "Aai",
+        "Baba",
+        "Kaka",
+        "Kaku",
+        "Aajoba",
+        "Aaji",
+        "Tai",
+        "Dada"
+      ],
+      "default_honorific": "Aai",
+      "strings": {
+        "consent": "नमस्कार {honorific}, मी हालो आहे. मी एक एआय सहाय्यक आहे, आणि {child} यांनी मला तुमच्याशी रोज थोडं बोलायला सांगितलं आहे. आम्ही रोज बोललो तर चालेल का?",
+        "greeting": "नमस्कार {honorific}, मी हालो. कसे आहात आज?",
+        "no_response": "हॅलो? {honorific}, माझं बोलणं ऐकू येतंय का?",
+        "closing": "छान वाटलं बोलून, {honorific}. मी उद्या {time} वाजता पुन्हा फोन करेन. काळजी घ्या!",
+        "emergency": "{honorific}, शांत राहा. मी आत्ताच घरच्यांना कळवत आहे. कृपया लगेच घरातल्या कोणाला तरी बोलवा, किंवा 112 वर फोन करा.",
+        "scam_warning": "{honorific}, कृपया लक्षात ठेवा, कोणालाही ओटीपी, बँकेची माहिती किंवा पैसे देऊ नका. मी घरच्यांना कळवत आहे.",
+        "declined_close": "ठीक आहे {honorific}, मी तुम्हाला पुन्हा फोन करणार नाही. काळजी घ्या."
+      },
+      "emergency_phrases": {
+        "fall": [
+          "पडलो",
+          "पडले",
+          "पडली",
+          "पडून गेल",
+          "तोल गेला",
+          "padle",
+          "padlo",
+          "padli"
+        ],
+        "chest_pain": [
+          "छातीत दुखत",
+          "छातीत दुखतंय",
+          "छातीत कळ",
+          "chhatit dukhat",
+          "chatit dukhat"
+        ],
+        "breathing": [
+          "श्वास घेता येत नाही",
+          "दम लागतो",
+          "दम लागत",
+          "shwas gheta yet nahi",
+          "dam lagto"
+        ],
+        "confusion": [
+          "चक्कर",
+          "बेशुद्ध",
+          "काही आठवत नाही",
+          "chakkar",
+          "beshudh"
+        ],
+        "self_harm": [
+          "जगावंसं वाटत नाही",
+          "जगायचं नाही",
+          "मरावंसं वाटतं",
+          "जीव द्यावा",
+          "jagavasa vatat nahi",
+          "maravasa vatta"
+        ],
+        "scam": [
+          "ओटीपी",
+          "otp",
+          "cvv",
+          "एटीएम",
+          "केवायसी",
+          "kyc",
+          "लॉटरी",
+          "खाते बंद",
+          "बँकेतून फोन"
+        ]
+      },
+      "honorifics_native": {
+        "Aai": "आई",
+        "Baba": "बाबा",
+        "Kaka": "काका",
+        "Kaku": "काकू",
+        "Aajoba": "आजोबा",
+        "Aaji": "आजी",
+        "Tai": "ताई",
+        "Dada": "दादा"
+      }
+    },
+    {
+      "code": "hi",
+      "status": "launch",
+      "review": "needs_native_review",
+      "name": "Hindi",
+      "native_name": "हिन्दी",
+      "script": "Devanagari",
+      "font_family": "Anek Devanagari",
+      "stt": {
+        "whisper": "hi",
+        "sarvam": "hi-IN",
+        "bhashini": "hi"
+      },
+      "tts": {
+        "edge_voices": {
+          "female": "hi-IN-SwaraNeural",
+          "male": "hi-IN-MadhurNeural"
+        },
+        "sarvam_lang": "hi-IN",
+        "bhashini": "hi"
+      },
+      "honorifics": [
+        "Mummy",
+        "Papa",
+        "Maa",
+        "Amma",
+        "Babuji",
+        "Dadi",
+        "Dada",
+        "Nani",
+        "Nana",
+        "Ji"
+      ],
+      "default_honorific": "Mummy",
+      "strings": {
+        "consent": "नमस्ते {honorific}, मैं हालो हूँ। मैं एक एआई सहायक हूँ, और {child} ने मुझसे कहा है कि मैं रोज़ आपसे थोड़ी बात करूँ। क्या रोज़ बात करना ठीक रहेगा?",
+        "greeting": "नमस्ते {honorific}, मैं हालो। आज कैसे हैं आप?",
+        "no_response": "हैलो? {honorific}, क्या आपको मेरी आवाज़ आ रही है?",
+        "closing": "आपसे बात करके अच्छा लगा, {honorific}। मैं कल {time} बजे फिर फ़ोन करूँगा। अपना ध्यान रखिए!",
+        "emergency": "{honorific}, घबराइए मत। मैं अभी घर वालों को बता रहा हूँ। कृपया तुरंत घर में किसी को बुलाइए, या 112 पर फ़ोन कीजिए।",
+        "scam_warning": "{honorific}, कृपया याद रखिए, किसी को भी ओटीपी, बैंक की जानकारी या पैसे न दें। मैं घर वालों को बता रहा हूँ।",
+        "declined_close": "ठीक है {honorific}, मैं अब आपको फ़ोन नहीं करूँगा। अपना ध्यान रखिए।"
+      },
+      "emergency_phrases": {
+        "fall": [
+          "गिर गया",
+          "गिर गई",
+          "गिर पड़",
+          "गिर गये",
+          "gir gaya",
+          "gir gayi",
+          "gir pada",
+          "gir padi"
+        ],
+        "chest_pain": [
+          "सीने में दर्द",
+          "छाती में दर्द",
+          "सीने में जकड़न",
+          "seene mein dard",
+          "chhati mein dard",
+          "chhati me dard"
+        ],
+        "breathing": [
+          "सांस नहीं",
+          "साँस नहीं",
+          "सांस फूल",
+          "सांस लेने में",
+          "saans nahi",
+          "saans nahin",
+          "sans phool"
+        ],
+        "confusion": [
+          "बेहोश",
+          "चक्कर",
+          "कुछ याद नहीं",
+          "behosh",
+          "chakkar aa"
+        ],
+        "self_harm": [
+          "जीना नहीं चाहता",
+          "जीना नहीं चाहती",
+          "मर जाना चाहत",
+          "जान दे दू",
+          "मरने का मन",
+          "jeena nahi chahta",
+          "jeena nahi chahti",
+          "marna chahta",
+          "marna chahti"
+        ],
+        "scam": [
+          "ओटीपी",
+          "otp",
+          "cvv",
+          "एटीएम",
+          "केवाईसी",
+          "kyc",
+          "लॉटरी",
+          "lottery",
+          "खाता बंद",
+          "account block",
+          "बैंक से फोन",
+          "बैंक से फ़ोन"
+        ]
+      },
+      "honorifics_native": {
+        "Mummy": "मम्मी",
+        "Papa": "पापा",
+        "Maa": "माँ",
+        "Amma": "अम्मा",
+        "Babuji": "बाबूजी",
+        "Dadi": "दादी",
+        "Dada": "दादा",
+        "Nani": "नानी",
+        "Nana": "नाना",
+        "Ji": "जी"
+      }
+    },
+    {
+      "code": "en",
+      "status": "launch",
+      "review": "ok",
+      "name": "English (India)",
+      "native_name": "English",
+      "script": "Latin",
+      "font_family": "Anek Latin",
+      "stt": {
+        "whisper": "en",
+        "sarvam": "en-IN",
+        "bhashini": "en"
+      },
+      "tts": {
+        "edge_voices": {
+          "female": "en-IN-NeerjaNeural",
+          "male": "en-IN-PrabhatNeural"
+        },
+        "sarvam_lang": "en-IN",
+        "bhashini": "en"
+      },
+      "honorifics": [
+        "Mummy",
+        "Papa",
+        "Mom",
+        "Dad",
+        "Uncle",
+        "Aunty",
+        "Grandma",
+        "Grandpa"
+      ],
+      "default_honorific": "Mummy",
+      "strings": {
+        "consent": "Hello {honorific}, this is Haalo. I'm an AI assistant, and {child} asked me to call you for a little chat every day. Is it alright if I do?",
+        "greeting": "Hello {honorific}, this is Haalo. How are you today?",
+        "no_response": "Hello? {honorific}, can you hear me?",
+        "closing": "It was lovely talking to you, {honorific}. I'll call again tomorrow at {time}. Take care!",
+        "emergency": "{honorific}, please stay calm. I'm letting your family know right now. Please call someone at home, or dial 112.",
+        "scam_warning": "{honorific}, please remember, never share an OTP, bank details or money with anyone on a call. I'm letting your family know.",
+        "declined_close": "That's alright, {honorific}. I won't call you again. Please take care."
+      },
+      "emergency_phrases": {
+        "fall": [
+          "i fell",
+          "i have fallen",
+          "fell down",
+          "i slipped and",
+          "can't get up",
+          "cannot get up"
+        ],
+        "chest_pain": [
+          "chest pain",
+          "pain in my chest",
+          "chest is paining",
+          "chest hurts",
+          "tightness in my chest"
+        ],
+        "breathing": [
+          "can't breathe",
+          "cannot breathe",
+          "short of breath",
+          "difficulty breathing",
+          "breathless"
+        ],
+        "confusion": [
+          "feel dizzy",
+          "fainted",
+          "blacked out",
+          "don't remember",
+          "feeling confused"
+        ],
+        "self_harm": [
+          "don't want to live",
+          "want to die",
+          "end my life",
+          "kill myself",
+          "better off dead"
+        ],
+        "scam": [
+          "otp",
+          "cvv",
+          "atm pin",
+          "kyc",
+          "lottery",
+          "account will be blocked",
+          "bank called",
+          "send money"
+        ]
+      },
+      "honorifics_native": {}
+    },
+    {
+      "code": "gu",
+      "status": "preview",
+      "review": "needs_native_review",
+      "name": "Gujarati",
+      "native_name": "ગુજરાતી",
+      "script": "Gujarati",
+      "font_family": "Anek Gujarati",
+      "stt": {
+        "whisper": "gu",
+        "sarvam": "gu-IN",
+        "bhashini": "gu"
+      },
+      "tts": {
+        "edge_voices": {
+          "female": "gu-IN-DhwaniNeural",
+          "male": "gu-IN-NiranjanNeural"
+        },
+        "sarvam_lang": "gu-IN",
+        "bhashini": "gu"
+      },
+      "honorifics": [
+        "Ba",
+        "Bapuji",
+        "Mummy",
+        "Papa",
+        "Dadi",
+        "Dada",
+        "Ben",
+        "Bhai"
+      ],
+      "default_honorific": "Ba",
+      "strings": {
+        "consent": "નમસ્તે {honorific}, હું હાલો છું. હું એક એઆઈ સહાયક છું, અને {child} એ મને રોજ તમારી સાથે થોડી વાત કરવા કહ્યું છે. રોજ વાત કરીએ તો ચાલશે?",
+        "greeting": "નમસ્તે {honorific}, હું હાલો. આજે કેમ છો?",
+        "no_response": "હલો? {honorific}, તમને મારો અવાજ સંભળાય છે?",
+        "closing": "તમારી સાથે વાત કરીને સારું લાગ્યું, {honorific}. હું કાલે {time} વાગ્યે ફરી ફોન કરીશ. કાળજી રાખજો!",
+        "emergency": "{honorific}, ગભરાશો નહીં. હું હમણાં જ ઘરના લોકોને જણાવું છું. કૃપા કરીને ઘરમાં કોઈને બોલાવો, અથવા 112 પર ફોન કરો.",
+        "scam_warning": "{honorific}, કૃપા કરીને યાદ રાખજો, કોઈને પણ ઓટીપી, બેંકની માહિતી કે પૈસા ન આપશો. હું ઘરના લોકોને જણાવું છું.",
+        "declined_close": "ઠીક છે {honorific}, હું હવે તમને ફોન નહીં કરું. કાળજી રાખજો."
+      },
+      "emergency_phrases": {
+        "fall": [
+          "પડી ગયો",
+          "પડી ગઈ",
+          "પડી ગયા",
+          "padi gayo",
+          "padi gai"
+        ],
+        "chest_pain": [
+          "છાતીમાં દુખે",
+          "છાતીમાં દુખાવો",
+          "chhatima dukhe",
+          "chhatima dukhavo"
+        ],
+        "breathing": [
+          "શ્વાસ લઈ શકતો નથી",
+          "શ્વાસ લઈ શકતી નથી",
+          "હાંફ ચડે",
+          "shwas"
+        ],
+        "confusion": [
+          "ચક્કર",
+          "બેભાન",
+          "કંઈ યાદ નથી",
+          "chakkar",
+          "bebhan"
+        ],
+        "self_harm": [
+          "જીવવું નથી",
+          "મરી જવું છે",
+          "jivavu nathi",
+          "mari javu che"
+        ],
+        "scam": [
+          "ઓટીપી",
+          "otp",
+          "cvv",
+          "કેવાયસી",
+          "kyc",
+          "લોટરી",
+          "ખાતું બંધ"
+        ]
+      },
+      "honorifics_native": {
+        "Ba": "બા",
+        "Bapuji": "બાપુજી",
+        "Mummy": "મમ્મી",
+        "Papa": "પપ્પા",
+        "Dadi": "દાદી",
+        "Dada": "દાદા",
+        "Ben": "બેન",
+        "Bhai": "ભાઈ"
+      }
+    },
+    {
+      "code": "ta",
+      "status": "preview",
+      "review": "needs_native_review",
+      "name": "Tamil",
+      "native_name": "தமிழ்",
+      "script": "Tamil",
+      "font_family": "Anek Tamil",
+      "stt": {
+        "whisper": "ta",
+        "sarvam": "ta-IN",
+        "bhashini": "ta"
+      },
+      "tts": {
+        "edge_voices": {
+          "female": "ta-IN-PallaviNeural",
+          "male": "ta-IN-ValluvarNeural"
+        },
+        "sarvam_lang": "ta-IN",
+        "bhashini": "ta"
+      },
+      "honorifics": [
+        "Amma",
+        "Appa",
+        "Paati",
+        "Thatha",
+        "Athai",
+        "Mama"
+      ],
+      "default_honorific": "Amma",
+      "strings": {
+        "consent": "வணக்கம் {honorific}, நான் ஹாலோ. நான் ஒரு ஏஐ உதவியாளர், {child} தினமும் உங்களிடம் சிறிது நேரம் பேசச் சொன்னார். தினமும் பேசலாமா?",
+        "greeting": "வணக்கம் {honorific}, நான் ஹாலோ. இன்று எப்படி இருக்கிறீர்கள்?",
+        "no_response": "ஹலோ? {honorific}, என் குரல் கேட்கிறதா?",
+        "closing": "உங்களிடம் பேசியது மகிழ்ச்சி, {honorific}. நாளை {time} மணிக்கு மீண்டும் அழைக்கிறேன். பார்த்துக்கொள்ளுங்கள்!",
+        "emergency": "{honorific}, பதற்றப்பட வேண்டாம். நான் இப்போதே வீட்டினருக்குத் தெரிவிக்கிறேன். உடனே வீட்டில் யாரையாவது அழையுங்கள், அல்லது 112-ஐ அழையுங்கள்.",
+        "scam_warning": "{honorific}, தயவுசெய்து நினைவில் கொள்ளுங்கள், யாருக்கும் ஓடிபி, வங்கி விவரங்கள் அல்லது பணம் கொடுக்காதீர்கள். நான் வீட்டினருக்குத் தெரிவிக்கிறேன்.",
+        "declined_close": "சரி {honorific}, இனி நான் உங்களை அழைக்க மாட்டேன். பார்த்துக்கொள்ளுங்கள்."
+      },
+      "emergency_phrases": {
+        "fall": [
+          "கீழே விழுந்த",
+          "விழுந்துட்ட",
+          "விழுந்து விட்ட",
+          "kizhe vizhundhen",
+          "vizhundhuten"
+        ],
+        "chest_pain": [
+          "நெஞ்சு வலி",
+          "நெஞ்சில் வலி",
+          "nenju vali"
+        ],
+        "breathing": [
+          "மூச்சு விட முடியல",
+          "மூச்சு திணறல",
+          "moochu vida mudiyala"
+        ],
+        "confusion": [
+          "மயக்கம்",
+          "மயங்கி",
+          "நினைவில்லை",
+          "mayakkam"
+        ],
+        "self_harm": [
+          "வாழ பிடிக்கவில்லை",
+          "சாக வேண்டும்",
+          "saga vendum",
+          "vaazha pidikkala"
+        ],
+        "scam": [
+          "ஓடிபி",
+          "otp",
+          "cvv",
+          "கேவைசி",
+          "kyc",
+          "லாட்டரி",
+          "கணக்கு முடக்க"
+        ]
+      },
+      "honorifics_native": {
+        "Amma": "அம்மா",
+        "Appa": "அப்பா",
+        "Paati": "பாட்டி",
+        "Thatha": "தாத்தா",
+        "Athai": "அத்தை",
+        "Mama": "மாமா"
+      }
+    },
+    {
+      "code": "te",
+      "status": "preview",
+      "review": "needs_native_review",
+      "name": "Telugu",
+      "native_name": "తెలుగు",
+      "script": "Telugu",
+      "font_family": "Anek Telugu",
+      "stt": {
+        "whisper": "te",
+        "sarvam": "te-IN",
+        "bhashini": "te"
+      },
+      "tts": {
+        "edge_voices": {
+          "female": "te-IN-ShrutiNeural",
+          "male": "te-IN-MohanNeural"
+        },
+        "sarvam_lang": "te-IN",
+        "bhashini": "te"
+      },
+      "honorifics": [
+        "Amma",
+        "Nanna",
+        "Ammamma",
+        "Thatha",
+        "Atta",
+        "Mama"
+      ],
+      "default_honorific": "Amma",
+      "strings": {
+        "consent": "నమస్కారం {honorific}, నేను హాలో. నేను ఒక ఏఐ సహాయకుడిని, {child} రోజూ మీతో కాసేపు మాట్లాడమని చెప్పారు. రోజూ మాట్లాడొచ్చా?",
+        "greeting": "నమస్కారం {honorific}, నేను హాలో. ఈ రోజు ఎలా ఉన్నారు?",
+        "no_response": "హలో? {honorific}, నా మాట వినిపిస్తోందా?",
+        "closing": "మీతో మాట్లాడటం సంతోషంగా ఉంది, {honorific}. రేపు {time} గంటకు మళ్లీ ఫోన్ చేస్తాను. జాగ్రత్తగా ఉండండి!",
+        "emergency": "{honorific}, కంగారు పడకండి. నేను ఇప్పుడే ఇంట్లో వాళ్లకు చెబుతున్నాను. దయచేసి ఇంట్లో ఎవరినైనా పిలవండి, లేదా 112కు ఫోన్ చేయండి.",
+        "scam_warning": "{honorific}, దయచేసి గుర్తుంచుకోండి, ఎవరికీ ఓటీపీ, బ్యాంకు వివరాలు లేదా డబ్బు ఇవ్వకండి. నేను ఇంట్లో వాళ్లకు చెబుతున్నాను.",
+        "declined_close": "సరే {honorific}, ఇక మీకు ఫోన్ చేయను. జాగ్రత్తగా ఉండండి."
+      },
+      "emergency_phrases": {
+        "fall": [
+          "పడిపోయాను",
+          "కింద పడ్డాను",
+          "జారి పడ్డాను",
+          "padipoyanu",
+          "kinda paddanu"
+        ],
+        "chest_pain": [
+          "ఛాతీలో నొప్పి",
+          "గుండెల్లో నొప్పి",
+          "chaatilo noppi",
+          "gundello noppi"
+        ],
+        "breathing": [
+          "ఊపిరి ఆడటం లేదు",
+          "ఊపిరి తీసుకోలేను",
+          "oopiri aadatam ledu"
+        ],
+        "confusion": [
+          "కళ్లు తిరుగుతున్నాయి",
+          "స్పృహ తప్పి",
+          "గుర్తు లేదు",
+          "kallu tirugutunnayi"
+        ],
+        "self_harm": [
+          "బతకాలని లేదు",
+          "చనిపోవాలని ఉంది",
+          "batakalani ledu",
+          "chanipovalani undi"
+        ],
+        "scam": [
+          "ఓటీపీ",
+          "otp",
+          "cvv",
+          "కేవైసీ",
+          "kyc",
+          "లాటరీ",
+          "ఖాతా బ్లాక్"
+        ]
+      },
+      "honorifics_native": {
+        "Amma": "అమ్మ",
+        "Nanna": "నాన్న",
+        "Ammamma": "అమ్మమ్మ",
+        "Thatha": "తాతయ్య",
+        "Atta": "అత్త",
+        "Mama": "మామ"
+      }
+    },
+    {
+      "code": "kn",
+      "status": "preview",
+      "review": "needs_native_review",
+      "name": "Kannada",
+      "native_name": "ಕನ್ನಡ",
+      "script": "Kannada",
+      "font_family": "Anek Kannada",
+      "stt": {
+        "whisper": "kn",
+        "sarvam": "kn-IN",
+        "bhashini": "kn"
+      },
+      "tts": {
+        "edge_voices": {
+          "female": "kn-IN-SapnaNeural",
+          "male": "kn-IN-GaganNeural"
+        },
+        "sarvam_lang": "kn-IN",
+        "bhashini": "kn"
+      },
+      "honorifics": [
+        "Amma",
+        "Appa",
+        "Ajji",
+        "Ajja",
+        "Atte",
+        "Mava"
+      ],
+      "default_honorific": "Amma",
+      "strings": {
+        "consent": "ನಮಸ್ಕಾರ {honorific}, ನಾನು ಹಾಲೋ. ನಾನು ಒಬ್ಬ ಎಐ ಸಹಾಯಕ, {child} ಪ್ರತಿದಿನ ನಿಮ್ಮ ಜೊತೆ ಸ್ವಲ್ಪ ಮಾತನಾಡಲು ಹೇಳಿದ್ದಾರೆ. ಪ್ರತಿದಿನ ಮಾತನಾಡಬಹುದೇ?",
+        "greeting": "ನಮಸ್ಕಾರ {honorific}, ನಾನು ಹಾಲೋ. ಇವತ್ತು ಹೇಗಿದ್ದೀರಿ?",
+        "no_response": "ಹಲೋ? {honorific}, ನನ್ನ ಧ್ವನಿ ಕೇಳಿಸುತ್ತಿದೆಯೇ?",
+        "closing": "ನಿಮ್ಮ ಜೊತೆ ಮಾತನಾಡಿ ಖುಷಿಯಾಯಿತು, {honorific}. ನಾಳೆ {time} ಗಂಟೆಗೆ ಮತ್ತೆ ಕರೆ ಮಾಡುತ್ತೇನೆ. ಜಾಗ್ರತೆ!",
+        "emergency": "{honorific}, ಗಾಬರಿಯಾಗಬೇಡಿ. ನಾನು ಈಗಲೇ ಮನೆಯವರಿಗೆ ತಿಳಿಸುತ್ತಿದ್ದೇನೆ. ದಯವಿಟ್ಟು ಮನೆಯಲ್ಲಿ ಯಾರನ್ನಾದರೂ ಕರೆಯಿರಿ, ಅಥವಾ 112ಗೆ ಕರೆ ಮಾಡಿ.",
+        "scam_warning": "{honorific}, ದಯವಿಟ್ಟು ನೆನಪಿಡಿ, ಯಾರಿಗೂ ಒಟಿಪಿ, ಬ್ಯಾಂಕ್ ವಿವರ ಅಥವಾ ಹಣ ಕೊಡಬೇಡಿ. ನಾನು ಮನೆಯವರಿಗೆ ತಿಳಿಸುತ್ತಿದ್ದೇನೆ.",
+        "declined_close": "ಸರಿ {honorific}, ಇನ್ನು ನಿಮಗೆ ಕರೆ ಮಾಡುವುದಿಲ್ಲ. ಜಾಗ್ರತೆ."
+      },
+      "emergency_phrases": {
+        "fall": [
+          "ಬಿದ್ದುಬಿಟ್ಟೆ",
+          "ಬಿದ್ದೆ",
+          "ಜಾರಿ ಬಿದ್ದೆ",
+          "biddubitte",
+          "jaari bidde"
+        ],
+        "chest_pain": [
+          "ಎದೆ ನೋವು",
+          "ಎದೆಯಲ್ಲಿ ನೋವು",
+          "ede novu"
+        ],
+        "breathing": [
+          "ಉಸಿರಾಡಲು ಆಗುತ್ತಿಲ್ಲ",
+          "ಉಸಿರು ಕಟ್ಟುತ್ತಿದೆ",
+          "usiraaduva"
+        ],
+        "confusion": [
+          "ತಲೆ ಸುತ್ತುತ್ತಿದೆ",
+          "ಪ್ರಜ್ಞೆ ತಪ್ಪಿ",
+          "ನೆನಪಿಲ್ಲ",
+          "tale suttuttide"
+        ],
+        "self_harm": [
+          "ಬದುಕಲು ಇಷ್ಟವಿಲ್ಲ",
+          "ಸಾಯಬೇಕು",
+          "badukalu ishtavilla",
+          "saayabeku"
+        ],
+        "scam": [
+          "ಒಟಿಪಿ",
+          "otp",
+          "cvv",
+          "ಕೆವೈಸಿ",
+          "kyc",
+          "ಲಾಟರಿ",
+          "ಖಾತೆ ಬ್ಲಾಕ್"
+        ]
+      },
+      "honorifics_native": {
+        "Amma": "ಅಮ್ಮ",
+        "Appa": "ಅಪ್ಪ",
+        "Ajji": "ಅಜ್ಜಿ",
+        "Ajja": "ಅಜ್ಜ",
+        "Atte": "ಅತ್ತೆ",
+        "Mava": "ಮಾವ"
+      }
+    },
+    {
+      "code": "bn",
+      "status": "preview",
+      "review": "needs_native_review",
+      "name": "Bengali",
+      "native_name": "বাংলা",
+      "script": "Bengali",
+      "font_family": "Anek Bangla",
+      "stt": {
+        "whisper": "bn",
+        "sarvam": "bn-IN",
+        "bhashini": "bn"
+      },
+      "tts": {
+        "edge_voices": {
+          "female": "bn-IN-TanishaaNeural",
+          "male": "bn-IN-BashkarNeural"
+        },
+        "sarvam_lang": "bn-IN",
+        "bhashini": "bn"
+      },
+      "honorifics": [
+        "Ma",
+        "Baba",
+        "Dida",
+        "Dadu",
+        "Thakuma",
+        "Kaku",
+        "Mashi"
+      ],
+      "default_honorific": "Ma",
+      "strings": {
+        "consent": "নমস্কার {honorific}, আমি হ্যালো। আমি একটি এআই সহায়ক, আর {child} আমাকে রোজ আপনার সঙ্গে একটু কথা বলতে বলেছেন। রোজ কথা বললে কি ঠিক আছে?",
+        "greeting": "নমস্কার {honorific}, আমি হ্যালো। আজ কেমন আছেন?",
+        "no_response": "হ্যালো? {honorific}, আমার কথা শুনতে পাচ্ছেন?",
+        "closing": "আপনার সঙ্গে কথা বলে ভালো লাগলো, {honorific}। কাল {time} টায় আবার ফোন করব। নিজের যত্ন নেবেন!",
+        "emergency": "{honorific}, ঘাবড়াবেন না। আমি এখনই বাড়ির লোকেদের জানাচ্ছি। দয়া করে বাড়িতে কাউকে ডাকুন, অথবা ১১২ নম্বরে ফোন করুন।",
+        "scam_warning": "{honorific}, দয়া করে মনে রাখবেন, কাউকে ওটিপি, ব্যাংকের তথ্য বা টাকা দেবেন না। আমি বাড়ির লোকেদের জানাচ্ছি।",
+        "declined_close": "ঠিক আছে {honorific}, আমি আর আপনাকে ফোন করব না। নিজের যত্ন নেবেন।"
+      },
+      "emergency_phrases": {
+        "fall": [
+          "পড়ে গেছি",
+          "পড়ে গিয়েছি",
+          "পড়ে গেলাম",
+          "pore gechi",
+          "pore gelam"
+        ],
+        "chest_pain": [
+          "বুকে ব্যথা",
+          "বুকে যন্ত্রণা",
+          "buke betha"
+        ],
+        "breathing": [
+          "শ্বাস নিতে পারছি না",
+          "দম বন্ধ",
+          "shas nite parchi na"
+        ],
+        "confusion": [
+          "মাথা ঘুরছে",
+          "অজ্ঞান",
+          "মনে নেই",
+          "matha ghurche"
+        ],
+        "self_harm": [
+          "বাঁচতে ইচ্ছে করে না",
+          "মরে যেতে ইচ্ছে",
+          "banchte icche kore na",
+          "more jete icche"
+        ],
+        "scam": [
+          "ওটিপি",
+          "otp",
+          "cvv",
+          "কেওয়াইসি",
+          "kyc",
+          "লটারি",
+          "অ্যাকাউন্ট বন্ধ"
+        ]
+      },
+      "honorifics_native": {
+        "Ma": "মা",
+        "Baba": "বাবা",
+        "Dida": "দিদা",
+        "Dadu": "দাদু",
+        "Thakuma": "ঠাকুমা",
+        "Kaku": "কাকু",
+        "Mashi": "মাসি"
+      }
+    },
+    {
+      "code": "ml",
+      "status": "preview",
+      "review": "needs_native_review",
+      "name": "Malayalam",
+      "native_name": "മലയാളം",
+      "script": "Malayalam",
+      "font_family": "Anek Malayalam",
+      "stt": {
+        "whisper": "ml",
+        "sarvam": "ml-IN",
+        "bhashini": "ml"
+      },
+      "tts": {
+        "edge_voices": {
+          "female": "ml-IN-SobhanaNeural",
+          "male": "ml-IN-MidhunNeural"
+        },
+        "sarvam_lang": "ml-IN",
+        "bhashini": "ml"
+      },
+      "honorifics": [
+        "Amma",
+        "Achan",
+        "Ammachi",
+        "Appooppan",
+        "Valyamma"
+      ],
+      "default_honorific": "Amma",
+      "strings": {
+        "consent": "നമസ്കാരം {honorific}, ഞാൻ ഹാലോ. ഞാൻ ഒരു എഐ സഹായിയാണ്, {child} എന്നോട് ദിവസവും ഒന്ന് സംസാരിക്കാൻ പറഞ്ഞിട്ടുണ്ട്. ദിവസവും സംസാരിക്കാമോ?",
+        "greeting": "നമസ്കാരം {honorific}, ഞാൻ ഹാലോ. ഇന്ന് എങ്ങനെയുണ്ട്?",
+        "no_response": "ഹലോ? {honorific}, എന്റെ ശബ്ദം കേൾക്കാമോ?",
+        "closing": "സംസാരിക്കാൻ കഴിഞ്ഞതിൽ സന്തോഷം, {honorific}. നാളെ {time} മണിക്ക് വീണ്ടും വിളിക്കാം. സൂക്ഷിക്കണേ!",
+        "emergency": "{honorific}, പേടിക്കേണ്ട. ഞാൻ ഇപ്പോൾ തന്നെ വീട്ടുകാരെ അറിയിക്കുന്നു. ദയവായി വീട്ടിൽ ആരെയെങ്കിലും വിളിക്കൂ, അല്ലെങ്കിൽ 112 ൽ വിളിക്കൂ.",
+        "scam_warning": "{honorific}, ദയവായി ഓർക്കുക, ആർക്കും ഒടിപി, ബാങ്ക് വിവരങ്ങൾ, പണം എന്നിവ നൽകരുത്. ഞാൻ വീട്ടുകാരെ അറിയിക്കുന്നു.",
+        "declined_close": "ശരി {honorific}, ഇനി വിളിക്കില്ല. സൂക്ഷിക്കണേ."
+      },
+      "emergency_phrases": {
+        "fall": [
+          "വീണുപോയി",
+          "വീണു",
+          "തെന്നി വീണു",
+          "veenu poyi",
+          "thenni veenu"
+        ],
+        "chest_pain": [
+          "നെഞ്ചുവേദന",
+          "നെഞ്ചിൽ വേദന",
+          "nenju vedana"
+        ],
+        "breathing": [
+          "ശ്വാസം കിട്ടുന്നില്ല",
+          "ശ്വാസംമുട്ട്",
+          "shwasam kittunnilla"
+        ],
+        "confusion": [
+          "തലകറക്കം",
+          "ബോധം പോയി",
+          "ഓർമ്മയില്ല",
+          "thalakarakkam"
+        ],
+        "self_harm": [
+          "ജീവിക്കാൻ തോന്നുന്നില്ല",
+          "മരിക്കണം",
+          "jeevikkan thonnunnilla",
+          "marikkanam"
+        ],
+        "scam": [
+          "ഒടിപി",
+          "otp",
+          "cvv",
+          "കെവൈസി",
+          "kyc",
+          "ലോട്ടറി",
+          "അക്കൗണ്ട് ബ്ലോക്ക്"
+        ]
+      },
+      "honorifics_native": {
+        "Amma": "അമ്മ",
+        "Achan": "അച്ഛൻ",
+        "Ammachi": "അമ്മച്ചി",
+        "Appooppan": "അപ്പൂപ്പൻ",
+        "Valyamma": "വല്യമ്മ"
+      }
+    },
+    {
+      "code": "pa",
+      "status": "planned",
+      "review": "needs_native_review",
+      "name": "Punjabi",
+      "native_name": "ਪੰਜਾਬੀ",
+      "script": "Gurmukhi",
+      "font_family": "Anek Gurmukhi",
+      "stt": {
+        "whisper": "pa",
+        "sarvam": "pa-IN",
+        "bhashini": "pa"
+      },
+      "tts": {
+        "edge_voices": {},
+        "sarvam_lang": "pa-IN",
+        "bhashini": "pa"
+      },
+      "note": "No Edge voice. Needs sarvam, bhashini or indic_local TTS before it can be enabled.",
+      "honorifics": [
+        "Bebe",
+        "Bapu ji",
+        "Mummy",
+        "Papa",
+        "Dadi",
+        "Dada"
+      ],
+      "default_honorific": "Bebe",
+      "strings": {
+        "consent": "ਸਤ ਸ੍ਰੀ ਅਕਾਲ {honorific}, ਮੈਂ ਹਾਲੋ ਹਾਂ। ਮੈਂ ਇੱਕ ਏਆਈ ਸਹਾਇਕ ਹਾਂ, ਅਤੇ {child} ਨੇ ਮੈਨੂੰ ਰੋਜ਼ ਤੁਹਾਡੇ ਨਾਲ ਥੋੜ੍ਹੀ ਗੱਲ ਕਰਨ ਲਈ ਕਿਹਾ ਹੈ। ਕੀ ਰੋਜ਼ ਗੱਲ ਕਰੀਏ?",
+        "greeting": "ਸਤ ਸ੍ਰੀ ਅਕਾਲ {honorific}, ਮੈਂ ਹਾਲੋ। ਅੱਜ ਕਿਵੇਂ ਹੋ?",
+        "no_response": "ਹੈਲੋ? {honorific}, ਕੀ ਤੁਹਾਨੂੰ ਮੇਰੀ ਆਵਾਜ਼ ਆ ਰਹੀ ਹੈ?",
+        "closing": "ਤੁਹਾਡੇ ਨਾਲ ਗੱਲ ਕਰਕੇ ਚੰਗਾ ਲੱਗਿਆ, {honorific}। ਮੈਂ ਕੱਲ੍ਹ {time} ਵਜੇ ਫੇਰ ਫ਼ੋਨ ਕਰਾਂਗਾ। ਆਪਣਾ ਖਿਆਲ ਰੱਖਣਾ!",
+        "emergency": "{honorific}, ਘਬਰਾਓ ਨਾ। ਮੈਂ ਹੁਣੇ ਘਰ ਵਾਲਿਆਂ ਨੂੰ ਦੱਸ ਰਿਹਾ ਹਾਂ। ਕਿਰਪਾ ਕਰਕੇ ਘਰ ਵਿੱਚ ਕਿਸੇ ਨੂੰ ਬੁਲਾਓ, ਜਾਂ 112 ਤੇ ਫ਼ੋਨ ਕਰੋ।",
+        "scam_warning": "{honorific}, ਯਾਦ ਰੱਖਿਓ, ਕਿਸੇ ਨੂੰ ਵੀ ਓਟੀਪੀ, ਬੈਂਕ ਦੀ ਜਾਣਕਾਰੀ ਜਾਂ ਪੈਸੇ ਨਾ ਦਿਓ। ਮੈਂ ਘਰ ਵਾਲਿਆਂ ਨੂੰ ਦੱਸ ਰਿਹਾ ਹਾਂ।",
+        "declined_close": "ਠੀਕ ਹੈ {honorific}, ਮੈਂ ਹੁਣ ਫ਼ੋਨ ਨਹੀਂ ਕਰਾਂਗਾ। ਆਪਣਾ ਖਿਆਲ ਰੱਖਣਾ।"
+      },
+      "emergency_phrases": {
+        "fall": [
+          "ਡਿੱਗ ਪਿਆ",
+          "ਡਿੱਗ ਪਈ",
+          "ਡਿੱਗ ਗਿਆ",
+          "digg pia",
+          "digg gaya"
+        ],
+        "chest_pain": [
+          "ਛਾਤੀ ਵਿੱਚ ਦਰਦ",
+          "ਸੀਨੇ ਵਿੱਚ ਦਰਦ",
+          "chhati vich dard"
+        ],
+        "breathing": [
+          "ਸਾਹ ਨਹੀਂ",
+          "ਸਾਹ ਨਹੀਂ ਆ",
+          "saah nahi"
+        ],
+        "confusion": [
+          "ਚੱਕਰ",
+          "ਬੇਹੋਸ਼",
+          "chakkar",
+          "behosh"
+        ],
+        "self_harm": [
+          "ਜਿਉਣਾ ਨਹੀਂ",
+          "ਮਰ ਜਾਣਾ",
+          "jeona nahi",
+          "mar jana"
+        ],
+        "scam": [
+          "ਓਟੀਪੀ",
+          "otp",
+          "cvv",
+          "kyc",
+          "ਲਾਟਰੀ"
+        ]
+      },
+      "honorifics_native": {
+        "Bebe": "ਬੇਬੇ",
+        "Bapu ji": "ਬਾਪੂ ਜੀ",
+        "Mummy": "ਮੰਮੀ",
+        "Papa": "ਪਾਪਾ",
+        "Dadi": "ਦਾਦੀ",
+        "Dada": "ਦਾਦਾ"
+      }
+    }
+  ]
+}

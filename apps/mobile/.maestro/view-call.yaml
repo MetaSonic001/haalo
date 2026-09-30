@@ -1,0 +1,17 @@
+# Maestro flow: view today's summary and open a call. Runs against the demo-data build (no Supabase keys).
+appId: app.haalo.family
+---
+- launchApp:
+    clearState: true
+- assertVisible: "Aai sounded cheerful today"
+- assertVisible: "BP tablet"
+- tapOn: "Read the full call"
+- assertVisible: "Medicines"
+- tapOn: "Full conversation"
+- assertVisible: "Original"
+- tapOn: "English"
+- back
+- tapOn: "Alerts"
+- assertVisible: "recurring complaint"
+- tapOn: "Acknowledge"
+- assertVisible: "Nothing needs your attention"

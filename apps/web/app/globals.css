@@ -1,0 +1,150 @@
+@import "tailwindcss";
+
+/* Theme variables (--bg, --text, ...) are injected from @haalo/ui-tokens in app/layout.tsx so tokens have one source. */
+
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-alt: var(--surface-alt);
+  --color-text: var(--text);
+  --color-muted: var(--text-muted);
+  --color-border: var(--border);
+  --color-accent: var(--accent);
+  --color-on-accent: var(--on-accent);
+  --color-good: var(--good);
+  --color-good-bg: var(--good-bg);
+  --color-danger: var(--danger);
+  --color-danger-bg: var(--danger-bg);
+  --color-warn: var(--warn);
+  --color-warn-bg: var(--warn-bg);
+  --color-ink: #1b2246;
+  --color-ink-soft: #252d57;
+  --color-morning: #eef2f8;
+  --color-marigold: #f3a712;
+
+  --font-sans: var(--font-latin), var(--font-deva), var(--font-guj), var(--font-taml), var(--font-telu),
+    var(--font-knda), var(--font-beng), var(--font-mlym), ui-sans-serif, system-ui, sans-serif;
+
+  --radius-card: 24px;
+  --radius-row: 14px;
+  --radius-input: 12px;
+  --radius-sheet: 28px;
+
+  --text-xs: 12px;
+  --text-sm: 14px;
+  --text-base: 16px;
+  --text-lg: 20px;
+  --text-xl: 25px;
+  --text-2xl: 31px;
+  --text-3xl: 39px;
+  --text-4xl: 49px;
+
+  --ease-out-soft: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+html {
+  background: var(--bg);
+  color: var(--text);
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+}
+body {
+  font-family: var(--font-sans);
+  font-size: var(--text-base);
+  line-height: 1.6;
+  font-optical-sizing: auto;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  min-height: 100dvh;
+}
+:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+::selection {
+  background: var(--accent);
+  color: var(--on-accent);
+}
+
+/* Anek has a width axis: headlines go wide and semi-bold, body stays normal width. */
+.display {
+  font-stretch: 118%;
+  font-weight: 620;
+  letter-spacing: -0.015em;
+  line-height: 1.08;
+  text-wrap: balance;
+}
+.prose-limit {
+  max-width: 68ch;
+}
+
+/* Paper grain over big gradient areas: gives the flat marigold/indigo a printed feel. */
+.grain::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.18;
+  mix-blend-mode: soft-light;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .55 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+}
+
+/* Block-print dot pattern used sparingly on dark sections. */
+.dots {
+  background-image: radial-gradient(color-mix(in oklab, var(--text) 16%, transparent) 1px, transparent 1.4px);
+  background-size: 22px 22px;
+}
+
+/* Marquee for language scripts */
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+.marquee-track { animation: marquee 48s linear infinite; }
+.marquee:hover .marquee-track { animation-play-state: paused; }
+
+/* Beam: dashes travel along the path from call to summary */
+@keyframes beam-dash {
+  to { stroke-dashoffset: -220; }
+}
+.beam-path { stroke-dasharray: 60 160; animation: beam-dash 3.4s linear infinite; }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .marquee-track, .beam-path { animation: none; }
+  *, *::before, *::after { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; }
+}
+
+/* ---------------------------------------------------------------- Haalo orb */
+@keyframes ring-out {
+  0% { transform: scale(0.62); opacity: 0.7; }
+  100% { transform: scale(1.38); opacity: 0; }
+}
+@keyframes ring-idle {
+  0%, 100% { opacity: 0.22; }
+  50% { opacity: 0.5; }
+}
+@keyframes breathe {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.04); }
+}
+@keyframes aurora-drift {
+  0%, 100% { transform: translate3d(0, 0, 0) rotate(0deg); }
+  50% { transform: translate3d(2%, -3%, 0) rotate(12deg); }
+}
+.orb-ring {
+  animation:
+    ring-out 1.9s cubic-bezier(0.16, 1, 0.3, 1) var(--d) 2 both,
+    ring-idle 5.2s ease-in-out calc(var(--d) + 4.4s) infinite backwards;
+}
+.orb-ring-live { animation: ring-idle 2.4s ease-in-out var(--d) infinite; }
+.orb-core { animation: breathe 5.2s ease-in-out 4.2s infinite; }
+.orb-aurora { animation: aurora-drift 14s ease-in-out infinite; }
+@media (prefers-reduced-motion: reduce) {
+  .orb-ring { animation: none; opacity: 0.32; }
+  .orb-ring-live { animation: none; opacity: 0.4; }
+  .orb-core, .orb-aurora { animation: none; }
+}

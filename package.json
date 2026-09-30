@@ -1,0 +1,26 @@
+{
+  "name": "haalo",
+  "private": true,
+  "packageManager": "pnpm@10.18.3",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "dev": "turbo run dev",
+    "dev:web": "turbo run dev --filter=@haalo/web",
+    "dev:mobile": "turbo run dev --filter=@haalo/mobile",
+    "dev:voice": "turbo run dev --filter=@haalo/voice",
+    "build": "turbo run build",
+    "lint": "turbo run lint",
+    "typecheck": "turbo run typecheck",
+    "test": "turbo run test",
+    "format": "prettier --write \"**/*.{ts,tsx,md,json,css}\" --ignore-path .gitignore",
+    "db:apply": "cd services/voice && uv run --with \"psycopg[binary]\" python ../../supabase/apply.py",
+    "sync-env": "node scripts/sync-env.mjs"
+  },
+  "devDependencies": {
+    "prettier": "3.9.9",
+    "turbo": "2.11.5",
+    "typescript": "5.9.3"
+  }
+}

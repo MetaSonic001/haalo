@@ -1,0 +1,12 @@
+{
+  "name": "@haalo/voice",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Thin wrapper so Turborepo can orchestrate the uv-managed Python service. Dependencies live in pyproject.toml.",
+  "scripts": {
+    "dev": "uv run haalo-voice",
+    "lint": "uv run ruff check haalo_voice tests",
+    "test": "uv run pytest -q",
+    "typecheck": "echo \"python: no typecheck step\""
+  }
+}
