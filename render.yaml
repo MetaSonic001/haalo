@@ -1,0 +1,54 @@
+# Render Blueprint for the voice service only (the web app goes on Vercel).
+services:
+  - type: web
+    name: heartline-voice
+    runtime: python
+    rootDir: services/voice
+    plan: starter            # the free 512 MB instance is too small for Pipecat + Silero VAD
+    healthCheckPath: /health
+    buildCommand: pip install uv && uv sync --frozen --no-dev
+    startCommand: uv run --no-sync haalo-voice
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.7
+      - key: APP_ENV
+        value: development   # "production" refuses Edge TTS and demands TURNSTILE_SECRET
+      - key: DEV_ONLY
+        value: "true"
+      - key: SCHEDULER_ENABLED
+        value: "true"
+      - key: BARGE_IN_MIN_WORDS
+        value: "3"
+      - key: DEFAULT_SILENCE_MS
+        value: "1200"
+      - key: NO_RESPONSE_SECONDS
+        value: "20"
+      - key: DEFAULT_STT_PROVIDER
+        value: groq_whisper
+      - key: GROQ_STT_MODEL
+        value: whisper-large-v3
+      - key: DEFAULT_TTS_PROVIDER
+        value: edge
+      - key: GROQ_MODEL_CONVERSATION
+        value: qwen/qwen3.8-27b
+      - key: GROQ_MODEL_FAST
+        value: openai/gpt-oss-20b
+      - key: GROQ_MODEL_SUMMARY
+        value: openai/gpt-oss-120b
+      - key: GROQ_MODEL_FALLBACK
+        value: openai/gpt-oss-120b
+      - key: GROQ_MODEL_VISION
+        value: qwen/qwen3.8-27b
+      # secrets: set these in the Render dashboard (sync: false = not stored in git)
+      - key: GROQ_API_KEY
+        sync: false
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_SERVICE_ROLE_KEY
+        sync: false
+      - key: INTERNAL_SERVICE_KEY
+        sync: false
+      - key: CORS_ORIGINS        # your Vercel URL, e.g. https://heartline.vercel.app (comma separated for more)
+        sync: false
+      - key: PUBLIC_VOICE_BASE_URL   # this service's own https URL on Render
+        sync: false
