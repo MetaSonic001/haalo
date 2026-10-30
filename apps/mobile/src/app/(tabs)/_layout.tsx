@@ -1,5 +1,5 @@
 import { Redirect, Tabs } from "expo-router";
-import { Bell, Phone, Sun, Users } from "lucide-react-native";
+import { Activity, Bell, LayoutGrid, Pill, Sun } from "lucide-react-native";
 import { useEffect } from "react";
 import { useFamily } from "@/lib/family";
 import { registerForPush } from "@/lib/notifications";
@@ -12,7 +12,7 @@ function TabsInner() {
   const { openFlags } = useFamily();
   const { userId } = useSession();
   useEffect(() => {
-    if (userId) void registerForPush(userId).catch(() => {});
+    if (userId && !config.workspace) void registerForPush(userId).catch(() => {});
   }, [userId]);
 
   return (
@@ -26,7 +26,8 @@ function TabsInner() {
       }}
     >
       <Tabs.Screen name="index" options={{ title: "Today", tabBarIcon: ({ color }) => <Sun size={24} color={color} /> }} />
-      <Tabs.Screen name="calls" options={{ title: "Calls", tabBarIcon: ({ color }) => <Phone size={24} color={color} /> }} />
+      <Tabs.Screen name="medicines" options={{ title: "Medicines", tabBarIcon: ({ color }) => <Pill size={24} color={color} /> }} />
+      <Tabs.Screen name="health" options={{ title: "Health", tabBarIcon: ({ color }) => <Activity size={24} color={color} /> }} />
       <Tabs.Screen
         name="alerts"
         options={{
@@ -36,7 +37,10 @@ function TabsInner() {
           tabBarIcon: ({ color }) => <Bell size={24} color={color} />,
         }}
       />
-      <Tabs.Screen name="family" options={{ title: "Family", tabBarIcon: ({ color }) => <Users size={24} color={color} /> }} />
+      <Tabs.Screen name="more" options={{ title: "More", tabBarIcon: ({ color }) => <LayoutGrid size={24} color={color} /> }} />
+      {/* Reached from More; kept as tab routes so they keep the tab bar */}
+      <Tabs.Screen name="calls" options={{ href: null }} />
+      <Tabs.Screen name="family" options={{ href: null }} />
     </Tabs>
   );
 }

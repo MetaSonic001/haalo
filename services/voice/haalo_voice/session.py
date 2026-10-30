@@ -15,6 +15,31 @@ class Medicine:
 
 
 @dataclass
+class DoseLine:
+    event_id: str
+    medicine: str
+    dose_text: str
+    due_label: str  # local time, e.g. "8:30 am"
+    status: str  # pending | reminded | taken | missed | skipped
+
+
+@dataclass
+class ApptLine:
+    id: str
+    title: str
+    doctor: str
+    when_text: str  # "tomorrow at 10:30 am"
+
+
+@dataclass
+class MessageLine:
+    id: str
+    from_name: str
+    kind: str  # note | question
+    body: str
+
+
+@dataclass
 class ParentProfile:
     parent_id: str
     name: str
@@ -41,7 +66,17 @@ class ParentProfile:
     next_call_time: str = "9:00"
     timezone: str = "Asia/Kolkata"
     family_language: str = "English"  # language of summaries for the family (owner app_language)
-    is_demo: bool = False
+    is_demo: bool = False  # the public anonymous demo persona: nothing is stored
+    sandbox: bool = False  # a demo-workspace parent: real rows, made-up phone number
+    tradition: str = ""
+    birthday: str | None = None
+    vital_ranges: dict = field(default_factory=dict)
+    vital_kinds: list[str] = field(default_factory=list)  # what they have measured recently (bp, sugar ...)
+    doses_today: list[DoseLine] = field(default_factory=list)
+    appointments: list[ApptLine] = field(default_factory=list)
+    messages: list[MessageLine] = field(default_factory=list)
+    occasions: list[str] = field(default_factory=list)
+    refills: list[str] = field(default_factory=list)
 
     def hotwords(self) -> str:
         words = [*self.vocab, *self.doctor_names, *self.family_names.values(), *[m.name for m in self.medicines]]
@@ -50,6 +85,24 @@ class ParentProfile:
             if w and w not in seen:
                 seen.append(w)
         return ", ".join(seen)[:400]
+
+
+@dataclass
+class LiveFeed:
+    """What a browser demo shows while the call is happening: the transcript and what Sneha did (confirmed a dose, logged a reading, raised an alert)."""
+
+    items: list[dict] = field(default_factory=list)
+    done: bool = False
+    created: float = field(default_factory=time.time)
+
+
+FEEDS: dict[str, LiveFeed] = {}
+
+
+def _prune_feeds() -> None:
+    cutoff = time.time() - 1800
+    for k in [k for k, f in FEEDS.items() if f.created < cutoff]:
+        FEEDS.pop(k, None)
 
 
 @dataclass
@@ -74,6 +127,28 @@ class CallSession:
     stt_provider: str = ""
     tts_provider: str = ""
     llm_model: str = ""
+    purpose: str = "checkin"  # checkin | reminder | inbound
+    dose_event_ids: list[str] = field(default_factory=list)  # a reminder call is about these doses
+    delivered_message_ids: list[str] = field(default_factory=list)
+    vitals_logged: list[dict] = field(default_factory=list)
+    doses_confirmed: list[dict] = field(default_factory=list)
+    help_requested: bool = False
+    feed: LiveFeed | None = None
+
+    def __post_init__(self) -> None:
+        # Only the public demo persona and demo-workspace parents expose a live feed; real families' calls never do.
+        if self.profile.is_demo or self.profile.sandbox:
+            _prune_feeds()
+            self.feed = FEEDS.setdefault(self.call_id, LiveFeed())
+
+    def emit(self, kind: str, text: str) -> None:
+        """kind: parent | agent | action | alert"""
+        if self.feed is not None and text:
+            self.feed.items.append({"i": len(self.feed.items), "kind": kind, "text": text, "t": round(time.time() - self.started_at, 1)})
+
+    def end_feed(self) -> None:
+        if self.feed is not None:
+            self.feed.done = True
 
 
 def demo_profile(language: str = "mr", honorific: str | None = None) -> ParentProfile:
@@ -93,6 +168,7 @@ def demo_profile(language: str = "mr", honorific: str | None = None) -> ParentPr
         medicines=[Medicine("BP tablet", times=["morning"])],
         recent_summaries=["Went to the temple with a neighbour. Knee a little sore in the evening."],
         follow_ups=["Ask how the knee is today"],
+        doses_today=[DoseLine("demo-1", "BP tablet", "1 tablet", "8:30 am", "pending")],
         is_demo=True,
     )
 

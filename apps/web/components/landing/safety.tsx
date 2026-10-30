@@ -5,13 +5,13 @@ const tiles = [
   {
     icon: BadgeCheck,
     title: "Honest about being an AI",
-    body: "The very first call says Haalo is an AI assistant set up by you, and asks for permission. If she says no, calls stop and you are told.",
+    body: "The very first call says Sneha is an AI assistant set up by you, and asks for permission. If she says no, calls stop and you are told.",
     wide: true,
   },
   {
     icon: Ban,
     title: "Never medical advice",
-    body: "Haalo asks, listens and logs. It never diagnoses or touches a dose. For anything worrying it tells her to reach family or call 112, and tells you.",
+    body: "Sneha asks, listens and logs. It never diagnoses or touches a dose. For anything worrying it tells her to reach family or call 112, and tells you.",
   },
   {
     icon: ShieldAlert,

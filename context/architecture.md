@@ -43,14 +43,23 @@ Adapters register in a factory; adding one never touches the bot pipeline.
 - Mobile/web "Call now": app -> web `/api/calls/now` (verifies user + family via RLS) -> voice `POST /calls/dial` (service key).
 - Post-call: summary JSON -> `call_summaries`, memories (deduped by key), follow-ups, Memory Lane story (unshared), pattern flags, family push + `notifications` row.
 
+## Care runtime (added 2026-10-25)
+
+- Scheduler tick: `CareEngine` (dose events, reminder calls, missed doses, appointment notices) + `enqueue_due_calls`; daily: insights and the weekly digest. Without a calling number only event generation and notices run (nothing is marked missed).
+- Escalation: `Escalator` (`escalation.py`) runs per escalation as an asyncio task, resumes after a restart, and records every step in `escalation_events`.
+- Live demo feed: `GET /live/{call_id}` (transcript + actions) exists only for demo-persona and sandbox calls; the phone page and Live demo page poll it.
+- `POST /webrtc/end` finishes a browser call at once (browsers do not reliably signal a closed peer connection).
+- Mobile and web share `/api/care/*` (web app): reads go through the same loaders as the website, writes through the same guarded server actions.
+
 ## Storage model
 
 - Postgres: all relational data. RLS on every table.
-- Storage buckets: `recordings` (private, opt-in), `memory-lane` (private). Signed URLs only.
+- Storage buckets: `recordings` (private, opt-in), `memory-lane` (private), `proofs` (private, photo proofs). Signed URLs only.
+- Care tables (migrations 4-6): `dose_events`, `vitals`, `contacts`, `escalations` + `escalation_events`, `family_messages`, `appointments`, `proofs`, `insights`, `weekly_digests`; `calls.purpose`; `parents.is_demo/tradition/birthday/vital_ranges/proof_token`.
 
 ## Auth and access
 
-- Supabase Auth (magic link, Google). Family members access only their family's rows via RLS.
+- Clerk authenticates (web + mobile). Supabase trusts Clerk tokens (third-party auth); family members access only their family's rows via RLS keyed on `requesting_user_id()` (`auth.jwt() ->> 'sub'`, text).
 - Voice service uses the service-role key server-side only. Admin = `is_admin` in app_metadata.
 
 ## Invariants

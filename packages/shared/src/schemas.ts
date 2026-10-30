@@ -24,9 +24,9 @@ export const flagStatus = z.enum(["open", "acknowledged", "resolved"]);
 // ---- Add-a-parent wizard (5 steps)
 export const parentStep1 = z.object({
   name: z.string({ error: "Enter their name" }).trim().min(1, "Enter their name"),
-  honorific: z.string({ error: "Choose how Haalo should address them" }).trim().min(1, "Choose how Haalo should address them"),
+  honorific: z.string({ error: "Choose how Sneha should address them" }).trim().min(1, "Choose how Sneha should address them"),
   phone_e164: e164,
-  /** How the parent knows you: Haalo says "<child_name> asked me to call". */
+  /** How the parent knows you: Sneha says "<child_name> asked me to call". */
   child_name: z.string().trim().max(60).default(""),
 });
 export const parentStep2 = z.object({

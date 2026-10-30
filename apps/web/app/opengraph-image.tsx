@@ -1,6 +1,6 @@
 import { ImageResponse } from "next/og";
 
-export const alt = "Haalo: A daily call for the people who raised you.";
+export const alt = "Heartline: A daily call for the people who raised you.";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -10,7 +10,7 @@ export default function OG() {
     (
       <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", background: "#1B2246", padding: 80, position: "relative" }}>
         <div style={{ display: "flex", flexDirection: "column", flex: 1, gap: 24 }}>
-          <div style={{ display: "flex", fontSize: 32, color: "#F3A712", fontWeight: 700 }}>Haalo</div>
+          <div style={{ display: "flex", fontSize: 32, color: "#F3A712", fontWeight: 700 }}>Heartline</div>
           <div style={{ display: "flex", fontSize: 76, lineHeight: 1.05, color: "#EEF2F8", fontWeight: 700, maxWidth: 640 }}>
             A daily call for the people who raised you.
           </div>

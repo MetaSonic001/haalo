@@ -13,7 +13,7 @@ export default function Privacy() {
       <p className="mt-2 text-muted">Draft version 0.1</p>
 
       <Section title="Who we are">
-        Haalo is a service that phones older people on behalf of their family, has a short friendly conversation, and shares a summary with the
+        Heartline is a service that phones older people on behalf of their family, has a short friendly conversation, and shares a summary with the
         family. [Company legal name, registered address and grievance officer contact to be added.]
       </Section>
       <Section title="What we collect">
@@ -25,7 +25,7 @@ export default function Privacy() {
         </ul>
       </Section>
       <Section title="Consent">
-        The family member consents in the app terms. The parent is told, on the very first call, that Haalo is an AI assistant set up by their family
+        The family member consents in the app terms. The parent is told, on the very first call, that Heartline is an AI assistant set up by their family
         member, and is asked for permission. If they decline, calls stop and the family member is notified. Consent status is recorded with a
         timestamp.
       </Section>
@@ -34,7 +34,7 @@ export default function Privacy() {
         quality. Improving speech models with recorded audio happens only with separate, explicit opt-in consent.
       </Section>
       <Section title="Who can see it">
-        Only members of the family circle. Transcripts are not visible to other families. Haalo staff may review a call for quality or safety, and
+        Only members of the family circle. Transcripts are not visible to other families. Heartline staff may review a call for quality or safety, and
         access is logged. We use service providers to run the product (hosting, database, speech and language processing, telephony); a list is
         available on request. [Provider list and data-transfer details to be completed.]
       </Section>
@@ -47,7 +47,7 @@ export default function Privacy() {
       </Section>
       <p className="mt-10">
         <Link href="/" className="font-medium underline">
-          Back to Haalo
+          Back to Heartline
         </Link>
       </p>
     </main>

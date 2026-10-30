@@ -2,6 +2,7 @@ import { createContext, useContext, useMemo, useState } from "react";
 import type { Flag } from "@haalo/db";
 import { loadFamily, loadFlags, type FamilyData } from "./data";
 import { useSession } from "./session";
+import { POLL_MS } from "./care";
 import { useCached } from "./use-cached";
 
 interface FamilyCtx {
@@ -23,9 +24,10 @@ export function FamilyProvider({ children }: { children: React.ReactNode }) {
     // Not signed in yet (welcome / sign-in screens): nothing to load.
     () => (userId ? loadFamily(userId) : Promise.resolve({ familyId: null, parents: [], members: [] })),
     [userId],
+    { pollMs: POLL_MS },
   );
   const ids = fam.data?.parents.map((p) => p.id) ?? [];
-  const flags = useCached<Flag[]>(`flags:${userId || "anon"}`, () => (userId ? loadFlags(ids) : Promise.resolve([])), [userId, ids.join(",")]);
+  const flags = useCached<Flag[]>(`flags:${userId || "anon"}`, () => (userId ? loadFlags(ids) : Promise.resolve([])), [userId, ids.join(",")], { pollMs: POLL_MS });
   const [selected, setSelected] = useState<string | null>(null);
 
   const value = useMemo<FamilyCtx>(() => {

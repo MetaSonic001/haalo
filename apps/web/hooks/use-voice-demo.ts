@@ -35,6 +35,7 @@ export function useVoiceDemo() {
   const [state, setState] = useState<DemoState>("idle");
   const [error, setError] = useState<string | null>(null);
   const [speaker, setSpeaker] = useState<"none" | "you" | "haalo">("none");
+  const [callId, setCallId] = useState<string | null>(null);
   const level = useMotionValue(0);
   const pcRef = useRef<RTCPeerConnection | null>(null);
   const streamRef = useRef<MediaStream | null>(null);
@@ -42,10 +43,16 @@ export function useVoiceDemo() {
   const rafRef = useRef<number>(0);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const pcIdRef = useRef<string | null>(null);
 
   const stop = useCallback(() => {
     cancelAnimationFrame(rafRef.current);
     if (timerRef.current) clearTimeout(timerRef.current);
+    if (pcIdRef.current) {
+      // tell the server the caller hung up, so it finishes the call now instead of waiting for the connection to time out
+      void fetch(`${VOICE_URL}/webrtc/end`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ pc_id: pcIdRef.current }), keepalive: true }).catch(() => undefined);
+      pcIdRef.current = null;
+    }
     pcRef.current?.close();
     pcRef.current = null;
     streamRef.current?.getTracks().forEach((t) => t.stop());
@@ -61,8 +68,9 @@ export function useVoiceDemo() {
   useEffect(() => stop, [stop]);
 
   const start = useCallback(
-    async (opts: { language: string; turnstileToken?: string; maxSeconds?: number }) => {
+    async (opts: { language: string; turnstileToken?: string; maxSeconds?: number; mode?: "checkin" | "reminder" | "inbound"; parentId?: string }) => {
       setError(null);
+      setCallId(null);
       setState("connecting");
       try {
         const mic = await navigator.mediaDevices.getUserMedia({
@@ -120,6 +128,8 @@ export function useVoiceDemo() {
             type: pc.localDescription?.type,
             language: opts.language,
             turnstile_token: opts.turnstileToken,
+            mode: opts.mode ?? "checkin",
+            dev_parent_id: opts.parentId,
           }),
         });
         if (!res.ok) {
@@ -127,6 +137,8 @@ export function useVoiceDemo() {
           throw new Error(detail.detail ?? `The voice service said ${res.status}`);
         }
         const answer = await res.json();
+        setCallId(answer.call_id ?? null);
+        pcIdRef.current = answer.pc_id ?? null;
         await pc.setRemoteDescription({ type: answer.type, sdp: answer.sdp });
         timerRef.current = setTimeout(stop, (opts.maxSeconds ?? 180) * 1000 + 3000);
       } catch (e) {
@@ -134,7 +146,7 @@ export function useVoiceDemo() {
         const msg = e instanceof Error ? e.message : "Something went wrong";
         setError(
           /Permission|NotAllowed/i.test(msg)
-            ? "Haalo needs your microphone to hear you. Allow it in the browser and try again."
+            ? "Sneha needs your microphone to hear you. Allow it in the browser and try again."
             : /Failed to fetch|NetworkError/i.test(msg)
               ? "We couldn't reach the voice service. Check that it is running and NEXT_PUBLIC_VOICE_DEMO_URL is right."
               : msg,
@@ -145,5 +157,5 @@ export function useVoiceDemo() {
     [level, stop],
   );
 
-  return { state, error, speaker, level, start, stop };
+  return { state, error, speaker, level, callId, start, stop };
 }

@@ -23,9 +23,9 @@ export default async function CallsPage({ searchParams }: { searchParams: Promis
   return (
     <div className="mx-auto max-w-3xl">
       <h1 className="display text-[31px] md:text-[39px]">Calls</h1>
-      <p className="mt-1 text-muted">Every conversation Haalo has had with {parent.honorific || parent.name}.</p>
+      <p className="mt-1 text-muted">Every conversation Sneha has had with {parent.honorific || parent.name}.</p>
       {recent.length === 0 ? (
-        <p className="mt-10 rounded-card bg-surface p-8 text-muted">No calls yet. The first one will appear here after Haalo rings.</p>
+        <p className="mt-10 rounded-card bg-surface p-8 text-muted">No calls yet. The first one will appear here after Sneha rings.</p>
       ) : (
         <ul className="mt-8 space-y-2">
           {recent.map((c) => (

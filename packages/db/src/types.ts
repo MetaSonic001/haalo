@@ -36,3 +36,36 @@ export interface Flag {
 export interface Memory { id: string; parent_id: string; fact: string; pinned: boolean }
 export interface MemoryLane { id: string; parent_id: string; title: string; audio_path: string | null; transcript: string; share_consent: boolean; created_at: string }
 export interface AppNotification { id: string; user_id: string; kind: string; title: string; body: string; data: Record<string, unknown>; read_at: string | null; created_at: string }
+
+// ---- care features (supabase/migrations/20261025000004_care_features.sql)
+export type DoseStatus = "pending" | "reminded" | "taken" | "missed" | "skipped";
+export interface DoseEvent {
+  id: string; parent_id: string; medicine_id: string; due_at: string; status: DoseStatus;
+  confirmed_via: "call" | "reminder_call" | "inbound" | "photo" | "family" | "manual" | null; confirmed_at: string | null;
+  reminder_attempts: number; last_reminder_at: string | null;
+  medicines?: { name: string; dose_text: string; critical: boolean } | null;
+}
+export interface MedicineFull extends Medicine { stock_count: number | null; pills_per_dose: number; critical: boolean; purpose: string }
+export type VitalKind = "bp" | "sugar" | "weight" | "temperature" | "spo2" | "pulse";
+export interface Vital {
+  id: string; parent_id: string; kind: VitalKind; value: number; value2: number | null; unit: string; context: string;
+  source: "call" | "photo" | "manual"; flagged: boolean; measured_at: string;
+}
+export interface Contact {
+  id: string; family_id: string; parent_id: string | null; name: string; relation: string; phone_e164: string;
+  kind: "family" | "neighbour" | "doctor" | "other"; priority: number; active: boolean;
+}
+export interface EscalationEvent { id: number; escalation_id: string; step: number; channel: "family_push" | "call" | "sms"; label: string; status: "sent" | "answered" | "no_answer" | "failed" | "acknowledged" | "simulated" | "skipped"; detail: string; at: string }
+export interface Escalation {
+  id: string; parent_id: string; trigger: "emergency" | "missed_calls" | "missed_dose" | "parent_request" | "manual_test";
+  status: "open" | "resolved"; summary: string; started_at: string; resolved_at: string | null; resolved_by: string | null;
+  escalation_events?: EscalationEvent[];
+}
+export interface FamilyMessage {
+  id: string; family_id: string; parent_id: string; from_name: string; kind: "note" | "question"; body: string;
+  status: "queued" | "delivered" | "answered"; delivered_at: string | null; reply_text: string | null; replied_at: string | null; created_at: string;
+}
+export interface Appointment { id: string; parent_id: string; title: string; doctor: string; location: string; at: string; notes: string; status: "scheduled" | "done" | "cancelled" }
+export interface Proof { id: string; parent_id: string; kind: "pill" | "bp" | "sugar" | "other"; storage_path: string | null; summary: string; extracted: Record<string, unknown>; created_at: string }
+export interface Insight { id: string; parent_id: string; kind: string; severity: "info" | "watch" | "concern"; title: string; body: string; data: Record<string, unknown>; week_start: string; created_at: string }
+export interface WeeklyDigest { id: string; parent_id: string; week_start: string; summary: string; data: { calls?: number; avg_mood?: number | null; adherence_pct?: number | null; highlights?: string[]; insights?: string[] } }

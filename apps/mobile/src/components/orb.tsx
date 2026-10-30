@@ -26,11 +26,11 @@ interface Props {
 const MARIGOLD = "#F3A712";
 
 /**
- * The Haalo orb, drawn with Skia. Welcome: rings expand and fade twice, then it breathes.
+ * The Sneha orb, drawn with Skia. Welcome: rings expand and fade twice, then it breathes.
  * Live call: rings keep pulsing and react to audio amplitude. Reduce Motion: static.
  */
 /** Web fallback: Skia on web needs its WASM engine loaded, which the native app does not. A static View orb keeps `expo start --web` clean. */
-function WebOrb({ size = 240, style, label = "The Haalo orb" }: Props) {
+function WebOrb({ size = 240, style, label = "The Sneha orb" }: Props) {
   const ring = (k: number, o: number) => ({ position: "absolute" as const, width: size * k, height: size * k, borderRadius: size, borderWidth: 1.5, borderColor: MARIGOLD, opacity: o });
   return (
     <View accessible accessibilityLabel={label} accessibilityRole="image" style={[{ width: size, height: size, alignItems: "center", justifyContent: "center" }, style]}>
@@ -45,7 +45,7 @@ export function Orb(props: Props) {
   return Platform.OS === "web" ? <WebOrb {...props} /> : <SkiaOrb {...props} />;
 }
 
-function SkiaOrb({ size = 240, live = false, level, style, label = "The Haalo orb" }: Props) {
+function SkiaOrb({ size = 240, live = false, level, style, label = "The Sneha orb" }: Props) {
   const reduce = useReducedMotion();
   const c = size / 2;
   const p0 = useSharedValue(0);

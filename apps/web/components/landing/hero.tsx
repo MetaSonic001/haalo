@@ -10,7 +10,7 @@ import { track } from "@/components/analytics";
 import { cn } from "@/lib/utils";
 import { launchLanguages, PRODUCT } from "@haalo/shared";
 
-export function Hero() {
+export function Hero({ showDemo = false }: { showDemo?: boolean }) {
   const [lang, setLang] = useState(launchLanguages[0]!.code);
   const demo = useVoiceDemo();
   const ts = useTurnstile();
@@ -21,10 +21,10 @@ export function Hero() {
   const orbState = live ? (demo.speaker === "haalo" ? "speaking" : "listening") : busy ? "connecting" : "idle";
   const caption = live
     ? demo.speaker === "haalo"
-      ? "Haalo is speaking"
+      ? "Sneha is speaking"
       : demo.speaker === "you"
-        ? "Haalo hears you"
-        : "Say hello, Haalo is listening"
+        ? "Sneha hears you"
+        : "Say hello, Sneha is listening"
     : busy
       ? "Connecting"
       : demo.state === "ended"
@@ -37,7 +37,7 @@ export function Hero() {
         <div>
           <h1 className="display text-[39px] sm:text-[49px] md:text-[56px]">{PRODUCT.tagline}</h1>
           <p className="prose-limit mt-6 text-lg text-muted">
-            Haalo calls your parents every morning in Marathi, Hindi or English, checks on medicines and mood, and sends you a two-line
+            Heartline calls your parents every morning in Marathi, Hindi or English, checks on medicines and mood, and sends you a two-line
             summary.
           </p>
 
@@ -57,10 +57,15 @@ export function Hero() {
                 }}
               >
                 {busy ? <Loader2 className="size-5 animate-spin" /> : <Mic className="size-5" />}
-                Hear Haalo in {active.name.replace(" (India)", "")}
+                Hear Sneha in {active.name.replace(" (India)", "")}
               </Button>
             )}
-            <Button asChild size="lg" variant="secondary">
+            {showDemo ? (
+              <Button asChild size="lg" variant="secondary">
+                <a href="/demo">Open the family dashboard</a>
+              </Button>
+            ) : null}
+            <Button asChild size="lg" variant={showDemo ? "ghost" : "secondary"}>
               <a href="#waitlist">Join the waitlist</a>
             </Button>
           </div>

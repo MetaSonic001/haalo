@@ -18,9 +18,9 @@ export default function Calls() {
   return (
     <Screen>
       <Display>Calls</Display>
-      <T muted style={{ marginBottom: 16 }}>{parent ? `Every conversation Haalo has had with ${parent.honorific || parent.name}.` : "Add a parent to see their calls."}</T>
+      <T muted style={{ marginBottom: 16 }}>{parent ? `Every conversation Sneha has had with ${parent.honorific || parent.name}.` : "Add a parent to see their calls."}</T>
       {calls.length === 0 ? (
-        <Empty>No calls yet. The first one will appear here after Haalo rings.</Empty>
+        <Empty>No calls yet. The first one will appear here after Sneha rings.</Empty>
       ) : (
         <View style={{ gap: 8 }}>
           {calls.map((c) => (

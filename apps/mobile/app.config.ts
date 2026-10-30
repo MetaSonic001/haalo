@@ -8,7 +8,7 @@ dotenv.config({ path: path.resolve(__dirname, "../../.env") });
 const env = process.env;
 
 const config: ExpoConfig = {
-  name: "Haalo",
+  name: "Heartline",
   slug: "haalo",
   scheme: "haalo",
   version: "0.1.0",
@@ -41,6 +41,8 @@ const config: ExpoConfig = {
     voiceUrl: env.EXPO_PUBLIC_VOICE_URL ?? env.NEXT_PUBLIC_VOICE_DEMO_URL ?? "http://localhost:7860",
     posthogKey: env.EXPO_PUBLIC_POSTHOG_KEY ?? "",
     clerkKey: env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY ?? "",
+    // Set only for the demo build: the app runs on the public demo family through the website's API, with no sign-in.
+    demoWorkspaceUrl: process.env.HAALO_DEMO_WORKSPACE_URL ?? "",
     eas: { projectId: env.EXPO_PUBLIC_EAS_PROJECT_ID ?? "" },
   },
 };

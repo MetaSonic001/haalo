@@ -46,7 +46,7 @@ export default function Alerts() {
       <Display>Alerts</Display>
       <T muted style={{ marginBottom: 16 }}>Emergencies come first, with the exact words that were said.</T>
       {err ? <T color="#C8352C" size={14}>{err}</T> : null}
-      {open.length === 0 ? <Empty>Nothing needs your attention. Haalo will tell you the moment something does.</Empty> : null}
+      {open.length === 0 ? <Empty>Nothing needs your attention. Sneha will tell you the moment something does.</Empty> : null}
       <View style={{ gap: 12 }}>
         {open.map((f) => {
           const p = parents[f.parent_id];

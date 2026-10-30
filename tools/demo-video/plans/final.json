@@ -1,0 +1,216 @@
+{
+ "title": "Heartline: final demo video",
+ "output": "Final/final-heartline-demo.mp4",
+ "voiceover": "Final/VOICEOVER-final-heartline-demo.md",
+ "sources": {
+  "P": {
+   "file": "Final/heartline-pitch.mp4",
+   "audioFromFile": true
+  },
+  "A": {
+   "file": "take1/video.mp4",
+   "timeline": "take1/timeline.json"
+  },
+  "C": {
+   "file": "Final/haalo-demo-photo-mobile-web-outro.mp4"
+  }
+ },
+ "segments": [
+  {
+   "src": "P",
+   "from": 0,
+   "to": 5,
+   "speed": 1,
+   "label": "Title: Heartline, a daily call for the people who raised you",
+   "vo": "Meet Heartline. A daily call for the people who raised you."
+  },
+  {
+   "src": "P",
+   "from": 5,
+   "to": 12,
+   "speed": 1,
+   "label": "The problem in three numbers",
+   "vo": "By 2031, nearly two hundred million Indians will be over sixty, and half skip their medicines."
+  },
+  {
+   "src": "P",
+   "from": 12,
+   "to": 21,
+   "speed": 1,
+   "label": "Rohan at his desk taps Call now, Aai's ordinary phone rings",
+   "vo": "Rohan, at his desk in Mumbai. Aai, at home in Pune. One tap, and Sneha rings her ordinary phone."
+  },
+  {
+   "src": "P",
+   "from": 21,
+   "to": 36,
+   "speed": 1,
+   "label": "Sneha introduces herself and checks in, in Marathi",
+   "vo": "No app, no smartphone. Sneha says who she is and on whose behalf she's calling, then checks in, in Marathi, Aai's own language."
+  },
+  {
+   "src": "P",
+   "from": 36,
+   "to": 54.7667,
+   "speed": 1,
+   "label": "Aai answers; Sneha passes on Rohan's news and asks his question",
+   "vo": "Aai says she has taken her medicine. Sneha passes on Rohan's news about his son's exam, and asks his question about Sunday's sweets. Aai answers in her own words, just like she would to family."
+  },
+  {
+   "src": "P",
+   "from": 54.7667,
+   "to": 62.7667,
+   "speed": 1,
+   "label": "The summary lands on Rohan's phone",
+   "vo": "Seconds after the call, Rohan's phone shows how Aai sounded and which medicines she took."
+  },
+  {
+   "src": "P",
+   "from": 62.7667,
+   "to": 68.7667,
+   "speed": 1,
+   "label": "... and on the family website",
+   "vo": "The website has the whole story: her mood, her medicines, her answer to his question."
+  },
+  {
+   "src": "P",
+   "from": 68.7667,
+   "to": 80.6333,
+   "speed": 1,
+   "label": "Optional photo: Aai shows a blood-pressure reading, Sneha reads it",
+   "vo": "Got a smartphone? Aai can simply show Sneha a photo of her blood pressure reading. Sneha reads it, logs it, and lets the family know."
+  },
+  {
+   "src": "P",
+   "from": 80.6333,
+   "to": 98.1333,
+   "speed": 1,
+   "label": "A dose is due: Sneha makes a short reminder call",
+   "vo": "When a dose is due, Sneha rings with a quick reminder and confirms it was taken. If it wasn't, she tries again, and then tells the family."
+  },
+  {
+   "src": "A",
+   "from": 53,
+   "to": 56.8,
+   "speed": 0.6,
+   "label": "Sneha speaks the family's own language: the languages page",
+   "vo": "Marathi, Hindi, Tamil, Telugu, Kannada, Bengali, Malayalam, Gujarati and English: Sneha speaks the language they think in."
+  },
+  {
+   "src": "A",
+   "from": 318,
+   "to": 337,
+   "speed": 1.4,
+   "zoom": [
+    1.5,
+    0.125,
+    0.5
+   ],
+   "label": "Appa, in Chennai, takes the call; Sneha speaks Tamil",
+   "vo": "A different morning. Appa, in Chennai, takes the call, and Sneha speaks Tamil."
+  },
+  {
+   "src": "A",
+   "from": 365.5,
+   "to": 374,
+   "speed": 1,
+   "zoom": [
+    1.5,
+    0.125,
+    0.5
+   ],
+   "label": "Appa says he fell",
+   "vo": "And then the moment that matters. Appa mentions he fell in the bathroom."
+  },
+  {
+   "src": "A",
+   "from": 374,
+   "to": 392,
+   "speed": 6,
+   "label": "The fall is flagged on the family website",
+   "vo": "Sneha flags it at once."
+  },
+  {
+   "src": "A",
+   "from": 392,
+   "to": 400,
+   "speed": 1,
+   "zoom": [
+    1.5,
+    0.125,
+    0.5
+   ],
+   "label": "Sneha tells him to get help",
+   "vo": "She tells him to call someone at home or dial one-one-two, and alerts the family."
+  },
+  {
+   "src": "P",
+   "from": 113.1333,
+   "to": 128.9667,
+   "speed": 1,
+   "label": "The alert ladder: family first, then contacts, until a human takes over",
+   "vo": "The alert ladder starts: the whole family first, then emergency contacts one by one, until a human answers. Rohan takes over, and the ladder stops."
+  },
+  {
+   "src": "P",
+   "from": 128.9667,
+   "to": 143.9667,
+   "speed": 1,
+   "label": "Dadi ji calls Sneha herself, in Hindi",
+   "vo": "Parents can call Sneha too. Dadi ji asks about her medicines, in Hindi, at any hour, and Sneha answers from today's real schedule."
+  },
+  {
+   "src": "C",
+   "from": 38,
+   "to": 72,
+   "speed": 3.4,
+   "label": "The mobile app: medicines, health, trends, messages, safety",
+   "vo": "In the app, Rohan sees medicines, vitals, trends, messages and safety.",
+   "zoom": [
+    1.25,
+    0.5,
+    0.55
+   ]
+  },
+  {
+   "src": "C",
+   "from": 79,
+   "to": 94,
+   "speed": 2.5,
+   "label": "The website: what Sneha noticed in mood, sleep and blood pressure",
+   "vo": "On the web: what Sneha noticed in mood, sleep and blood pressure."
+  },
+  {
+   "src": "C",
+   "from": 94,
+   "to": 103,
+   "speed": 3,
+   "label": "The website: appointments and festivals",
+   "vo": "Appointments and festivals."
+  },
+  {
+   "src": "C",
+   "from": 105,
+   "to": 114.5,
+   "speed": 1,
+   "label": "Safety: who Sneha contacts, in order, and the alert history",
+   "vo": "In Safety, the family sets who Sneha contacts and in what order, and every alert is kept in a full history."
+  },
+  {
+   "src": "C",
+   "from": 114.5,
+   "to": 121,
+   "speed": 1,
+   "label": "The Family page: the circle and who gets which alerts",
+   "vo": "And a Family page: who is in the circle and which alerts each person gets."
+  },
+  {
+   "src": "C",
+   "from": 121.5,
+   "to": 128.5,
+   "speed": 1,
+   "label": "Closing card",
+   "vo": "Heartline. Peace of mind, in her own language. Try the live demo."
+  }
+ ]
+}

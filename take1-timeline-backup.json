@@ -1,0 +1,313 @@
+{
+  "total": 542.9,
+  "t0Epoch": 1792948525619,
+  "scenes": [
+    {
+      "scene": "intro: title card",
+      "t": 0,
+      "note": ""
+    },
+    {
+      "scene": "intro: the problem",
+      "t": 6.7,
+      "note": ""
+    },
+    {
+      "scene": "intro: meet the family",
+      "t": 17.3,
+      "note": ""
+    },
+    {
+      "scene": "landing page",
+      "t": 25,
+      "note": ""
+    },
+    {
+      "scene": "landing: the care loop",
+      "t": 40.9,
+      "note": ""
+    },
+    {
+      "scene": "landing: languages",
+      "t": 52.4,
+      "note": ""
+    },
+    {
+      "scene": "morning: the three screens",
+      "t": 59.7,
+      "note": ""
+    },
+    {
+      "scene": "morning: Rohan taps Call now",
+      "t": 70.5,
+      "note": ""
+    },
+    {
+      "scene": "morning: Aai's phone rings",
+      "t": 73.5,
+      "note": ""
+    },
+    {
+      "scene": "morning: Aai answers",
+      "t": 82.7,
+      "note": ""
+    },
+    {
+      "scene": "parent says",
+      "t": 98.9,
+      "note": "aai_checkin[0] मी छान आहे, आज सकाळी औषध घेतलं"
+    },
+    {
+      "scene": "morning: Sneha passes on Rohan's news",
+      "t": 110.4,
+      "note": ""
+    },
+    {
+      "scene": "parent says",
+      "t": 110.5,
+      "note": "aai_checkin[1] अरे वा, आरवला शाबास सांग! माझं गुडघं थोडं दुखतंय"
+    },
+    {
+      "scene": "morning: Sneha asks Rohan's question",
+      "t": 143,
+      "note": ""
+    },
+    {
+      "scene": "parent says",
+      "t": 143.1,
+      "note": "aai_checkin[2] हो हो, पुरणपोळी आण, आणि थोडी बाकरवडी पण"
+    },
+    {
+      "scene": "parent says",
+      "t": 156.4,
+      "note": "aai_checkin[3] ठीक आहे, उद्या बोलू"
+    },
+    {
+      "scene": "morning: call ends, the summary is written",
+      "t": 172.1,
+      "note": ""
+    },
+    {
+      "scene": "morning: the update lands on Rohan's phone",
+      "t": 183.1,
+      "note": ""
+    },
+    {
+      "scene": "morning: and on his laptop",
+      "t": 188.1,
+      "note": ""
+    },
+    {
+      "scene": "website: today",
+      "t": 195.7,
+      "note": ""
+    },
+    {
+      "scene": "website: Aai's answer to Rohan's question",
+      "t": 212,
+      "note": ""
+    },
+    {
+      "scene": "reminder: the evening dose",
+      "t": 221.2,
+      "note": ""
+    },
+    {
+      "scene": "reminder: Rohan taps Remind now",
+      "t": 228.1,
+      "note": ""
+    },
+    {
+      "scene": "parent says",
+      "t": 257.6,
+      "note": "aai_reminder[0] हो, मी बीपीची गोळी घेतली"
+    },
+    {
+      "scene": "parent says",
+      "t": 268.8,
+      "note": "aai_reminder[1] मला छान वाटतंय, धन्यवाद"
+    },
+    {
+      "scene": "reminder: call ends",
+      "t": 282,
+      "note": ""
+    },
+    {
+      "scene": "reminder: the dose is confirmed on the website",
+      "t": 289.8,
+      "note": ""
+    },
+    {
+      "scene": "emergency: Appa's morning call",
+      "t": 294.8,
+      "note": ""
+    },
+    {
+      "scene": "emergency: Rohan calls from the mobile app",
+      "t": 302.1,
+      "note": ""
+    },
+    {
+      "scene": "parent says",
+      "t": 332.7,
+      "note": "appa_checkin[0] நான் நன்றாக இருக்கிறேன், மாத்திரை சாப்பிட்டேன்"
+    },
+    {
+      "scene": "emergency: Appa reads out his blood pressure",
+      "t": 344.7,
+      "note": ""
+    },
+    {
+      "scene": "parent says",
+      "t": 344.8,
+      "note": "appa_checkin[1] இன்று என் இரத்த அழுத்தம் நூற்று ஐம்பது க்கு தொண்ணூற்று ஐந்து"
+    },
+    {
+      "scene": "parent says",
+      "t": 361.1,
+      "note": "appa_checkin[2] ஆமாம், சரிதான்"
+    },
+    {
+      "scene": "emergency: Appa says he fell",
+      "t": 370.7,
+      "note": ""
+    },
+    {
+      "scene": "parent says",
+      "t": 370.8,
+      "note": "appa_checkin[3] நான் இன்று காலை குளியலறையில் விழுந்துவிட்டேன்"
+    },
+    {
+      "scene": "emergency: the alert ladder starts, Rohan's phone buzzes",
+      "t": 402.3,
+      "note": ""
+    },
+    {
+      "scene": "emergency: the alert on the mobile app",
+      "t": 408.5,
+      "note": ""
+    },
+    {
+      "scene": "emergency: the ladder works down the contacts",
+      "t": 419.5,
+      "note": ""
+    },
+    {
+      "scene": "emergency: nobody has answered yet",
+      "t": 433.5,
+      "note": ""
+    },
+    {
+      "scene": "emergency: Rohan takes over",
+      "t": 442.6,
+      "note": ""
+    },
+    {
+      "scene": "inbound: Dadi ji calls Sneha",
+      "t": 449,
+      "note": ""
+    },
+    {
+      "scene": "parent says",
+      "t": 472.5,
+      "note": "dadi_inbound[0] मेरी दवाई आज कब लेनी है?"
+    },
+    {
+      "scene": "parent says",
+      "t": 489.2,
+      "note": "dadi_inbound[1] ठीक है, धन्यवाद बेटा"
+    },
+    {
+      "scene": "photo proof",
+      "t": 505,
+      "note": ""
+    },
+    {
+      "scene": "end",
+      "t": 542.9,
+      "note": "total 542.9s"
+    }
+  ],
+  "audio": [
+    {
+      "kind": "parent",
+      "file": "..\\tools\\demo-video\\audio\\aai_checkin_0.wav",
+      "epoch": 1792948624440
+    },
+    {
+      "kind": "parent",
+      "file": "..\\tools\\demo-video\\audio\\aai_checkin_1.wav",
+      "epoch": 1792948636031
+    },
+    {
+      "kind": "parent",
+      "file": "..\\tools\\demo-video\\audio\\aai_checkin_2.wav",
+      "epoch": 1792948668670
+    },
+    {
+      "kind": "parent",
+      "file": "..\\tools\\demo-video\\audio\\aai_checkin_3.wav",
+      "epoch": 1792948682039
+    },
+    {
+      "kind": "haalo",
+      "file": "haalo-01.webm",
+      "epoch": 1792948608263
+    },
+    {
+      "kind": "parent",
+      "file": "..\\tools\\demo-video\\audio\\aai_reminder_0.wav",
+      "epoch": 1792948783224
+    },
+    {
+      "kind": "parent",
+      "file": "..\\tools\\demo-video\\audio\\aai_reminder_1.wav",
+      "epoch": 1792948794393
+    },
+    {
+      "kind": "haalo",
+      "file": "haalo-02.webm",
+      "epoch": 1792948768070
+    },
+    {
+      "kind": "parent",
+      "file": "..\\tools\\demo-video\\audio\\appa_checkin_0.wav",
+      "epoch": 1792948858246
+    },
+    {
+      "kind": "parent",
+      "file": "..\\tools\\demo-video\\audio\\appa_checkin_1.wav",
+      "epoch": 1792948870370
+    },
+    {
+      "kind": "parent",
+      "file": "..\\tools\\demo-video\\audio\\appa_checkin_2.wav",
+      "epoch": 1792948886684
+    },
+    {
+      "kind": "parent",
+      "file": "..\\tools\\demo-video\\audio\\appa_checkin_3.wav",
+      "epoch": 1792948896353
+    },
+    {
+      "kind": "haalo",
+      "file": "haalo-03.webm",
+      "epoch": 1792948842400
+    },
+    {
+      "kind": "parent",
+      "file": "..\\tools\\demo-video\\audio\\dadi_inbound_0.wav",
+      "epoch": 1792948998033
+    },
+    {
+      "kind": "parent",
+      "file": "..\\tools\\demo-video\\audio\\dadi_inbound_1.wav",
+      "epoch": 1792949014817
+    },
+    {
+      "kind": "haalo",
+      "file": "haalo-04.webm",
+      "epoch": 1792948986424
+    }
+  ]
+}

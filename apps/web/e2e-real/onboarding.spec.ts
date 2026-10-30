@@ -42,6 +42,6 @@ test("sign in, add a Marathi parent through the wizard, see it on the dashboard"
   await expect(page.getByText(/First call scheduled for 09:00 tomorrow|First call scheduled for 9:00 tomorrow/).first()).toBeVisible({ timeout: 20_000 });
 
   await page.waitForURL("**/app", { timeout: 15_000 });
-  await expect(page.getByText(/Haalo will call Aai at 9:00 tomorrow/)).toBeVisible();
+  await expect(page.getByText(/Sneha will call Aai at 9:00 tomorrow/)).toBeVisible();
   await page.screenshot({ path: "e2e-real/out/4-dashboard.png" });
 });

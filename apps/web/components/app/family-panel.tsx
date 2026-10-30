@@ -14,7 +14,7 @@ type Prefs = Member["alert_prefs"];
 const prefLabels: Array<[keyof Prefs, string, string]> = [
   ["emergency", "Emergencies and scams", "Falls, chest pain, distress, suspicious callers. Recommended for everyone."],
   ["summary", "Daily summary", "A two-line note after each call."],
-  ["missed", "Missed calls", "When Haalo couldn't reach them two days running."],
+  ["missed", "Missed calls", "When Sneha couldn't reach them two days running."],
 ];
 
 export function FamilyPanel({ familyId, members, viewerId, isOwner }: { familyId: string; members: Member[]; viewerId: string; isOwner: boolean }) {

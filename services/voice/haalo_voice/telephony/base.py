@@ -81,6 +81,14 @@ class TelephonyProvider(ABC):
     @abstractmethod
     def verify_webhook(self, *, url: str, form: dict[str, str], signature: str) -> bool: ...
 
+    async def alert_call(self, *, to_e164: str, say_text: str, ack_url: str, language: str = "en-IN") -> str:
+        """Call a family member or neighbour, read an alert aloud, and let them press 1 to confirm they are on it.
+        Optional: providers without it raise NotImplementedError and the escalation ladder falls back to SMS/push."""
+        raise NotImplementedError(f"{self.name} has no alert_call")
+
+    async def send_sms(self, *, to_e164: str, body: str) -> str:
+        raise NotImplementedError(f"{self.name} has no send_sms")
+
     @property
     @abstractmethod
     def sample_rate(self) -> int:

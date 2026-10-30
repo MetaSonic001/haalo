@@ -38,7 +38,7 @@ describe("schemas", () => {
 
 describe("i18n", () => {
   it("interpolates and falls back to English", () => {
-    expect(t("en", "empty_today", { name: "Aai", time: "9:00" })).toBe("Haalo will call Aai at 9:00 tomorrow. You'll get a summary here.");
+    expect(t("en", "empty_today", { name: "Aai", time: "9:00" })).toBe("Sneha will call Aai at 9:00 tomorrow. You'll get a summary here.");
     expect(t("hi", "empty_today", { name: "Mummy", time: "9:00" })).toContain("Mummy");
   });
 });

@@ -1,6 +1,6 @@
-# Haalo
+# Heartline
 
-*A daily call for the people who raised you.* Haalo phones your parents every day in their own language, checks on medicines,
+*A daily call for the people who raised you.* Heartline phones your parents every day in their own language, checks on medicines,
 meals, sleep and mood, and sends the family a short summary. Anything worrying (a fall, chest pain, a scam call, distress,
 repeated missed calls) alerts the family immediately.
 
@@ -46,7 +46,7 @@ Edge TTS is an unofficial endpoint: it only works with `DEV_ONLY=true` and the s
 
 | Phase | You provide |
 | --- | --- |
-| 1. Talk to Haalo in the browser | `GROQ_API_KEY`, then `uv run haalo-models` (in `services/voice`) to pick `GROQ_MODEL_*` |
+| 1. Talk to Sneha in the browser | `GROQ_API_KEY`, then `uv run haalo-models` (in `services/voice`) to pick `GROQ_MODEL_*` |
 | 2. Real data | A hosted Supabase project: URL, public key, service-role key. Apply `supabase/migrations/*` (`supabase db push`) |
 | 3. Real phone calls | Twilio SID/token/number, and a public URL for the voice service (`cloudflared tunnel --url http://localhost:7860` or ngrok) |
 | Better voices | `SARVAM_API_KEY` (paid after free credits) or Bhashini keys (free, best effort) or a self-hosted `INDIC_LOCAL_URL` |

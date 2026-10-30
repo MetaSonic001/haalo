@@ -3,12 +3,12 @@
 from __future__ import annotations
 
 import json
+import time
 from typing import Any
 
 import httpx
 from loguru import logger
-from pipecat.pipeline.llm_switcher import LLMSwitcher
-from pipecat.pipeline.service_switcher import ServiceSwitcherStrategyFailover
+from openai import RateLimitError
 from pipecat.services.groq.llm import GroqLLMService
 
 from .config import ConfigError, Settings
@@ -55,22 +55,49 @@ def reasoning_effort(model: str) -> str | None:
     return None
 
 
-def _one(s: Settings, model: str, temperature: float = 0.6) -> GroqLLMService:
+class QuotaAwareGroqLLM(GroqLLMService):
+    """Groq conversation LLM that moves to GROQ_MODEL_FALLBACK when the primary model is rate limited (HTTP 429).
+
+    Groq rate limits are per model (tokens per minute and per day), so a second model is a second quota. Without this a 429 simply
+    silenced the call: Sneha stopped answering mid-conversation. After a 429 the fallback is used for `cooldown_s`, then the primary
+    is tried again."""
+
+    fallback_model: str | None = None
+    cooldown_s: float = 600.0
+    _degraded_until: float = 0.0
+
+    def build_chat_completion_params(self, params_from_context):
+        params = super().build_chat_completion_params(params_from_context)
+        if self.fallback_model and time.time() < self._degraded_until:
+            params["model"] = self.fallback_model
+            if eff := reasoning_effort(self.fallback_model):
+                params["reasoning_effort"] = eff
+            else:
+                params.pop("reasoning_effort", None)
+        return params
+
+    async def get_chat_completions(self, context):
+        try:
+            return await super().get_chat_completions(context)
+        except RateLimitError as e:
+            if not self.fallback_model or time.time() < self._degraded_until:
+                raise
+            logger.warning(f"Groq rate limit on the conversation model; using {self.fallback_model} for {self.cooldown_s:.0f}s ({str(e)[:140]})")
+            self._degraded_until = time.time() + self.cooldown_s
+            return await super().get_chat_completions(context)
+
+
+def build_conversation_llm(s: Settings) -> QuotaAwareGroqLLM:
+    """Conversation LLM. If GROQ_MODEL_FALLBACK is set it takes over automatically while the primary model is rate limited."""
+    model = s.groq_model_conversation
     extra = {"reasoning_effort": e} if (e := reasoning_effort(model)) else {}
-    return GroqLLMService(
+    llm = QuotaAwareGroqLLM(
         api_key=s.groq_api_key,
-        settings=GroqLLMService.Settings(model=model, temperature=temperature, max_completion_tokens=220, **extra),
+        settings=GroqLLMService.Settings(model=model, temperature=0.6, max_completion_tokens=220, **extra),
     )
-
-
-def build_conversation_llm(s: Settings):
-    """Conversation LLM; if GROQ_MODEL_FALLBACK is set, fail over to it on hard errors (e.g. sustained 429)."""
-    primary = _one(s, s.groq_model_conversation)
-    if s.groq_model_fallback and s.groq_model_fallback != s.groq_model_conversation:
-        return LLMSwitcher(
-            llms=[primary, _one(s, s.groq_model_fallback)], strategy_type=ServiceSwitcherStrategyFailover
-        )
-    return primary
+    if s.groq_model_fallback and s.groq_model_fallback != model:
+        llm.fallback_model = s.groq_model_fallback
+    return llm
 
 
 async def chat_json(s: Settings, model: str, system: str, user: str, max_tokens: int = 700) -> dict[str, Any]:

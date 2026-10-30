@@ -2,6 +2,8 @@ import { Nav } from "@/components/landing/nav";
 import { Hero } from "@/components/landing/hero";
 import { MorningSummary } from "@/components/landing/morning-summary";
 import { HowItWorks } from "@/components/landing/how-it-works";
+import { Care } from "@/components/landing/care";
+import { demoEnabled } from "@/lib/demo-flag";
 import { Languages } from "@/components/landing/languages";
 import { Safety } from "@/components/landing/safety";
 import { Pricing } from "@/components/landing/pricing";
@@ -13,7 +15,7 @@ import { Footer } from "@/components/landing/footer";
 const jsonLd = {
   "@context": "https://schema.org",
   "@graph": [
-    { "@type": "Organization", name: "Haalo", description: "A daily call for the people who raised you." },
+    { "@type": "Organization", name: "Sneha", description: "A daily call for the people who raised you." },
     {
       "@type": "FAQPage",
       mainEntity: faqs.map(([q, a]) => ({ "@type": "Question", name: q, acceptedAnswer: { "@type": "Answer", text: a } })),
@@ -26,9 +28,10 @@ export default function Home() {
     <>
       <Nav />
       <main id="main">
-        <Hero />
+        <Hero showDemo={demoEnabled} />
         <MorningSummary />
         <HowItWorks />
+        <Care />
         <Languages />
         <Safety />
         <Pricing />

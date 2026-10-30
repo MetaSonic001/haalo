@@ -17,7 +17,7 @@ export default function Welcome() {
         <View style={{ gap: 12 }}>
           <Display size={fs(34)}>{PRODUCT.tagline}</Display>
           <T muted size={17}>
-            Haalo phones your parents every morning in their own language, and tells you how they are.
+            Heartline phones your parents every morning in their own language, and tells you how they are.
           </T>
         </View>
         <View style={{ gap: 12 }}>

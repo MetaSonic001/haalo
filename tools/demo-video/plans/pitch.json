@@ -1,0 +1,190 @@
+{
+ "title": "Heartline: product pitch video",
+ "output": "heartline-pitch.mp4",
+ "voiceover": "VOICEOVER-pitch.md",
+ "sources": {
+  "A": {
+   "file": "take1/video.mp4",
+   "timeline": "take1/timeline.json"
+  },
+  "B": {
+   "file": "t2-morning.mp4",
+   "timeline": "t2-timeline.json"
+  },
+  "C": {
+   "file": "t3.mp4",
+   "timeline": "t3-timeline.json"
+  },
+  "D": {
+   "file": "t4.mp4",
+   "timeline": "t4-timeline.json"
+  }
+ },
+ "segments": [
+  {
+   "src": "A",
+   "from": 0.3,
+   "to": 5.3,
+   "speed": 1,
+   "label": "Title: Heartline, a daily call for the people who raised you",
+   "vo": "Meet Heartline. A daily call for the people who raised you."
+  },
+  {
+   "src": "A",
+   "from": 8.0,
+   "to": 15.0,
+   "speed": 1,
+   "label": "The problem in three numbers",
+   "vo": "By 2031, nearly two hundred million Indians will be over sixty, and half won't take their medicines as prescribed."
+  },
+  {
+   "src": "B",
+   "from": 10.0,
+   "to": 19.0,
+   "speed": 1,
+   "label": "Rohan at his desk taps Call now, Aai's ordinary phone rings",
+   "vo": "Rohan, at his desk in Mumbai. Aai, at home in Pune. One tap, and Sneha rings her ordinary phone."
+  },
+  {
+   "src": "B",
+   "from": 21.0,
+   "to": 36.0,
+   "speed": 1,
+   "label": "Sneha introduces herself and checks in, in Marathi",
+   "vo": "No app, no smartphone. Sneha says who she is and on whose behalf she's calling, then checks in, in Marathi, Aai's own language.",
+   "zoom": [
+    1.5,
+    0.125,
+    0.55
+   ]
+  },
+  {
+   "src": "B",
+   "from": 37.0,
+   "to": 67.0,
+   "speed": 1.6,
+   "label": "Aai answers; Sneha passes on Rohan's news and asks his question",
+   "vo": "Aai says she has taken her medicine. Sneha passes on Rohan's news about his son's exam, and asks his question about Sunday's sweets. Aai answers in her own words, just like she would to family."
+  },
+  {
+   "src": "B",
+   "from": 140.0,
+   "to": 148.0,
+   "speed": 1,
+   "label": "The summary lands on Rohan's phone",
+   "vo": "Seconds after the call, Rohan's phone shows how Aai sounded and which medicines she took.",
+   "zoom": [
+    1.5,
+    0.89,
+    0.5
+   ]
+  },
+  {
+   "src": "B",
+   "from": 148.0,
+   "to": 154.0,
+   "speed": 1,
+   "label": "... and on the family website",
+   "vo": "The website has the whole story: her mood, her medicines, her answer to his question.",
+   "zoom": [
+    1.4,
+    0.5,
+    0.5
+   ]
+  },
+  {
+   "src": "C",
+   "from": 6.0,
+   "to": 25.0,
+   "speed": 1.6,
+   "label": "Optional photo: Aai shows a blood-pressure reading, Sneha reads it",
+   "vo": "Got a smartphone? Aai can simply show Sneha a photo of her blood pressure reading. Sneha reads it, logs it, and lets the family know.",
+   "zoom": [
+    1.4,
+    0.22,
+    0.6
+   ]
+  },
+  {
+   "src": "A",
+   "from": 242.0,
+   "to": 270.0,
+   "speed": 1.6,
+   "label": "A dose is due: Sneha makes a short reminder call",
+   "vo": "When a dose is due, Sneha rings with a quick reminder and confirms it was taken. If it wasn't, she tries again, and then tells the family.",
+   "zoom": [
+    1.5,
+    0.22,
+    0.55
+   ]
+  },
+  {
+   "src": "A",
+   "from": 368.0,
+   "to": 383.0,
+   "speed": 1,
+   "label": "Appa says he fell: Sneha tells him to get help and alerts the family",
+   "vo": "And then the moment that matters. Appa mentions he fell in the bathroom. Sneha tells him to call someone at home or dial one-one-two, and alerts the family at once.",
+   "zoom": [
+    1.5,
+    0.125,
+    0.5
+   ]
+  },
+  {
+   "src": "A",
+   "from": 402.0,
+   "to": 440.0,
+   "speed": 2.4,
+   "label": "The alert ladder: family first, then contacts, until a human takes over",
+   "vo": "The alert ladder starts: the whole family first, then emergency contacts one by one, until a human answers. Rohan takes over, and the ladder stops.",
+   "zoom": [
+    1.3,
+    0.5,
+    0.5
+   ]
+  },
+  {
+   "src": "D",
+   "from": 13.0,
+   "to": 28.0,
+   "speed": 1,
+   "label": "Dadi ji calls Sneha herself, in Hindi",
+   "vo": "Parents can call Sneha too. Dadi ji asks about her medicines, in Hindi, at any hour, and Sneha answers from today's real schedule.",
+   "zoom": [
+    1.5,
+    0.22,
+    0.55
+   ]
+  },
+  {
+   "src": "C",
+   "from": 38.0,
+   "to": 72.0,
+   "speed": 3.4,
+   "label": "The mobile app: medicines, health, trends, messages, safety",
+   "vo": "In the app, Rohan sees medicines, vitals, trends, messages and safety.",
+   "zoom": [
+    1.25,
+    0.5,
+    0.55
+   ]
+  },
+  {
+   "src": "C",
+   "from": 81.0,
+   "to": 112.0,
+   "speed": 3.9,
+   "label": "The website: trends, calendar, alert history",
+   "vo": "On the web: mood and sleep trends, appointments and festivals, and a full alert history."
+  },
+  {
+   "src": "C",
+   "from": 121.5,
+   "to": 128.5,
+   "speed": 1,
+   "label": "Closing card",
+   "vo": "Heartline. Peace of mind, in her own language. Try the live demo."
+  }
+ ]
+}

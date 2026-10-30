@@ -29,7 +29,8 @@ CLASSIFIER_SYSTEM = """You are a safety classifier for phone calls with an elder
 "severity": one of ["none","low","medium","high","emergency"], "evidence_quote": "exact short quote from the text, or empty"}.
 emergency = a fall with injury/unable to get up, chest pain, trouble breathing, fainting, sudden confusion, stroke signs, any statement of wanting to die.
 high = new significant pain, repeated missed critical medicine, being pressured by a stranger for OTP/bank/money.
-medium = ongoing complaint, low mood, loneliness. low = mild passing mention. none = ordinary chat. Do not over-trigger on ordinary talk."""
+medium = ongoing complaint, low mood, loneliness. low = mild passing mention. none = ordinary chat. Do not over-trigger on ordinary talk.
+A health reading said as a number (blood pressure, sugar, weight) is recorded elsewhere: it is "none" unless they also describe symptoms or distress."""
 
 FlagSink = Callable[[dict], Awaitable[None]]
 
@@ -111,6 +112,7 @@ class SafetyProcessor(FrameProcessor):
         if isinstance(frame, TranscriptionFrame) and frame.text.strip():
             text = frame.text
             self._session.turns.append({"speaker": "parent", "text": text, "t": time.time()})
+            self._session.emit("parent", text)
             hit = self._lang.match_emergency(text)
             if hit:
                 category, phrase = hit
@@ -143,6 +145,7 @@ class SafetyProcessor(FrameProcessor):
         flag = {"category": ev.category, "severity": ev.severity, "evidence_quote": ev.evidence_quote, "source": ev.source}
         self._session.flags.append(flag)
         logger.bind(call_id=self._session.call_id).warning(f"SAFETY {flag}")
+        self._session.emit("alert", f"Safety check: {ev.category.replace('_', ' ')} ({ev.severity}). \"{ev.evidence_quote}\"")
         p = self._session.profile
         fmt = {"honorific": p.honorific, "child": p.child_name}
         if ev.category in EMERGENCY_CATEGORIES and (ev.source == "keyword" or ev.severity == "emergency"):

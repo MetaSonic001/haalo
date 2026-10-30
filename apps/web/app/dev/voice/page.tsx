@@ -53,7 +53,7 @@ export default function DevVoice() {
         </Button>
       )}
       <p role="status" className="text-sm text-muted">
-        {demo.error ? <span className="text-danger">{demo.error}</span> : `State: ${demo.state}${live ? ` · ${demo.speaker === "none" ? "quiet" : demo.speaker === "haalo" ? "Haalo speaking" : "you speaking"}` : ""}`}
+        {demo.error ? <span className="text-danger">{demo.error}</span> : `State: ${demo.state}${live ? ` · ${demo.speaker === "none" ? "quiet" : demo.speaker === "haalo" ? "Sneha speaking" : "you speaking"}` : ""}`}
       </p>
     </main>
   );

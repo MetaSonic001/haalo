@@ -15,7 +15,7 @@ interface SessionCtx {
 
 const Ctx = createContext<SessionCtx | null>(null);
 
-const DEMO: SessionCtx = { ready: true, session: { userId: "demo-user" }, userId: "demo-user", name: "Riya", signOut: async () => {} };
+const DEMO: SessionCtx = { ready: true, session: { userId: "demo-user" }, userId: "demo-user", name: "Rohan", signOut: async () => {} };
 
 function ClerkSession({ children }: { children: React.ReactNode }) {
   const { isLoaded, isSignedIn, userId, getToken, signOut } = useAuth();
@@ -44,7 +44,7 @@ function ClerkSession({ children }: { children: React.ReactNode }) {
 
 /** Clerk owns sign-in. Without keys (demo mode) the app is explorable on sample data with no auth at all. */
 export function SessionProvider({ children }: { children: React.ReactNode }) {
-  if (config.demo) return <Ctx.Provider value={DEMO}>{children}</Ctx.Provider>;
+  if (config.demo || config.workspace) return <Ctx.Provider value={DEMO}>{children}</Ctx.Provider>;
   return (
     <ClerkProvider publishableKey={config.clerkKey} tokenCache={tokenCache}>
       <ClerkSession>{children}</ClerkSession>

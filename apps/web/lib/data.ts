@@ -1,7 +1,6 @@
 import "server-only";
 import type { Call, CallSchedule, CallSummaryRow, CallTurn, Flag, Medicine, MemoryLane, Parent } from "@haalo/db";
-import { createServerSupabase } from "./supabase/server";
-import { liveMode } from "./supabase/config";
+import { getDb, isLive } from "./db";
 import { mockCalls, mockFlags, mockMedicines, mockMembers, mockParent, mockSummaries, mockTurns } from "@haalo/db";
 
 export interface Member {
@@ -21,10 +20,10 @@ export interface FamilyData {
 }
 
 export async function loadFamily(viewerId: string): Promise<FamilyData> {
-  if (!liveMode) {
+  if (!(await isLive())) {
     return { familyId: "f1", familyName: "Riya's family", parents: [mockParent], members: mockMembers, demo: true };
   }
-  const sb = await createServerSupabase();
+  const sb = await getDb();
   const { data: memberships } = await sb.from("family_members").select("family_id, role").eq("user_id", viewerId).limit(1);
   const familyId = memberships?.[0]?.family_id as string | undefined;
   if (!familyId) return { familyId: null, familyName: "", parents: [], members: [], demo: false };
@@ -56,7 +55,7 @@ export interface TodayData {
 }
 
 export async function loadToday(parentId: string): Promise<TodayData> {
-  if (!liveMode) {
+  if (!(await isLive())) {
     const withSummary = mockCalls.map((c) => ({ ...c, summary: mockSummaries[c.id] ?? null }));
     return {
       latest: withSummary.find((c) => c.status === "completed") ?? null,
@@ -66,7 +65,7 @@ export async function loadToday(parentId: string): Promise<TodayData> {
       schedule: { window_start: "09:00:00", days_of_week: [0, 1, 2, 3, 4, 5, 6], paused_until: null },
     };
   }
-  const sb = await createServerSupabase();
+  const sb = await getDb();
   const [{ data: calls }, { data: meds }, { data: flags }, { data: sched }] = await Promise.all([
     sb.from("calls").select("*, call_summaries(*)").eq("parent_id", parentId).order("created_at", { ascending: false }).limit(20),
     sb.from("medicines").select("*").eq("parent_id", parentId).eq("active", true),
@@ -88,12 +87,12 @@ export async function loadToday(parentId: string): Promise<TodayData> {
 }
 
 export async function loadCall(callId: string) {
-  if (!liveMode) {
+  if (!(await isLive())) {
     const call = mockCalls.find((c) => c.id === callId);
     if (!call) return null;
     return { call, summary: mockSummaries[callId] ?? null, turns: callId === "c1" ? mockTurns : [], parent: mockParent };
   }
-  const sb = await createServerSupabase();
+  const sb = await getDb();
   const { data: call } = await sb.from("calls").select("*").eq("id", callId).maybeSingle();
   if (!call) return null;
   const [{ data: summary }, { data: turns }, { data: parent }] = await Promise.all([
@@ -105,25 +104,25 @@ export async function loadCall(callId: string) {
 }
 
 export async function loadFlags(parentIds: string[]): Promise<Flag[]> {
-  if (!liveMode) return mockFlags;
+  if (!(await isLive())) return mockFlags;
   if (!parentIds.length) return [];
-  const sb = await createServerSupabase();
+  const sb = await getDb();
   const { data } = await sb.from("flags").select("*").in("parent_id", parentIds).order("created_at", { ascending: false }).limit(100);
   return (data ?? []) as Flag[];
 }
 
 export async function loadMemoryLane(parentIds: string[]): Promise<MemoryLane[]> {
-  if (!liveMode || !parentIds.length) return [];
-  const sb = await createServerSupabase();
+  if (!(await isLive()) || !parentIds.length) return [];
+  const sb = await getDb();
   const { data } = await sb.from("memory_lane").select("*").in("parent_id", parentIds).order("created_at", { ascending: false });
   return (data ?? []) as MemoryLane[];
 }
 
 export async function loadSchedule(parentId: string): Promise<CallSchedule | null> {
-  if (!liveMode) {
+  if (!(await isLive())) {
     return { id: "s1", parent_id: parentId, days_of_week: [0, 1, 2, 3, 4, 5, 6], window_start: "09:00:00", window_end: "10:30:00", paused_until: null, skip_next_date: null, active: true };
   }
-  const sb = await createServerSupabase();
+  const sb = await getDb();
   const { data } = await sb.from("call_schedules").select("*").eq("parent_id", parentId).maybeSingle();
   return (data as CallSchedule) ?? null;
 }

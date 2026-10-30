@@ -93,13 +93,13 @@ export function AddParentWizard() {
       <AnimatePresence mode="wait" initial={false}>
         <motion.div key={step} initial={{ opacity: 0, x: 16 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -16 }} transition={{ duration: 0.2 }}>
           {step === 0 && (
-            <Section title="Who are we calling?" hint="Haalo will use the name and title the way you'd say it at home.">
+            <Section title="Who are we calling?" hint="Sneha will use the name and title the way you'd say it at home.">
               <Field label="Their name" error={errors.name}>
                 <Input value={d.name ?? ""} onChange={(e) => set({ name: e.target.value })} placeholder="Shobha" autoFocus />
               </Field>
               <div role="group" aria-labelledby="honorific-label" className="space-y-1.5">
                 <span id="honorific-label" className="text-sm font-medium">
-                  How Haalo should address them
+                  How Sneha should address them
                 </span>
                 <div className="flex flex-wrap gap-2">
                   {lang.honorifics.map((h) => (
@@ -111,7 +111,7 @@ export function AddParentWizard() {
                 <Input aria-label="Or type your own" className="mt-2" value={d.honorific ?? ""} onChange={(e) => set({ honorific: e.target.value })} placeholder="Or type your own" />
                 {errors.honorific ? <span className="block text-sm text-danger">{errors.honorific}</span> : null}
               </div>
-              <Field label="Your name, as they know you" hint={"Haalo says \"Riya asked me to call you\" on the first call."}>
+              <Field label="Your name, as they know you" hint={"Sneha says \"Riya asked me to call you\" on the first call."}>
                 <Input value={d.child_name ?? ""} onChange={(e) => set({ child_name: e.target.value })} placeholder="Riya" />
               </Field>
               <Field label="Their phone number" error={errors.phone_e164} hint="With the country code, e.g. +91 98765 43210">
@@ -121,7 +121,7 @@ export function AddParentWizard() {
           )}
 
           {step === 1 && (
-            <Section title="Which language do they think in?" hint="Tap a voice to hear how Haalo will greet them.">
+            <Section title="Which language do they think in?" hint="Tap a voice to hear how Sneha will greet them.">
               <div className="grid gap-2 sm:grid-cols-2">
                 {selectableLanguages.map((l) => (
                   <button
@@ -147,14 +147,14 @@ export function AddParentWizard() {
                   ))}
                 </div>
               </div>
-              <Field label="Dialect or region (optional)" hint="e.g. Pune, Kolhapuri, Konkan. Helps Haalo sound familiar.">
+              <Field label="Dialect or region (optional)" hint="e.g. Pune, Kolhapuri, Konkan. Helps Sneha sound familiar.">
                 <Input value={d.dialect ?? ""} onChange={(e) => set({ dialect: e.target.value })} />
               </Field>
             </Section>
           )}
 
           {step === 2 && (
-            <Section title="When is a good time?" hint={`Haalo will call ${name} once a day inside this window.`}>
+            <Section title="When is a good time?" hint={`Sneha will call ${name} once a day inside this window.`}>
               <div className="grid grid-cols-2 gap-4">
                 <Field label="Earliest" error={errors.window_start}>
                   <Input type="time" value={d.window_start} onChange={(e) => set({ window_start: e.target.value })} />
@@ -179,7 +179,7 @@ export function AddParentWizard() {
           {step === 4 && <LovesStep d={d} set={set} name={name} />}
 
           {step === 5 && (
-            <Section title="Ready to schedule the first call?" hint={`The first call introduces Haalo as an AI assistant set up by you, and asks ${name} for permission. If they say no, calls stop and you'll be told.`}>
+            <Section title="Ready to schedule the first call?" hint={`The first call introduces Sneha as an AI assistant set up by you, and asks ${name} for permission. If they say no, calls stop and you'll be told.`}>
               <dl className="divide-y divide-border rounded-card bg-surface px-5">
                 <Line k="Name" v={`${d.name} (${d.honorific})`} />
                 <Line k="Phone" v={d.phone_e164 ?? ""} />
@@ -269,7 +269,7 @@ function MedicinesStep({ d, set, name }: { d: Draft; set: (p: Partial<Draft>) =>
     setMedName("");
   };
   return (
-    <Section title="Any medicines to ask about?" hint={`Haalo will gently ask whether ${name} has taken them. It never gives medical advice. Skip this if you like.`}>
+    <Section title="Any medicines to ask about?" hint={`Sneha will gently ask whether ${name} has taken them. It never gives medical advice. Skip this if you like.`}>
       <div className="flex gap-2">
         <Input value={medName} onChange={(e) => setMedName(e.target.value)} onKeyDown={(e) => e.key === "Enter" && (e.preventDefault(), add())} placeholder="BP tablet" />
         <select value={time} onChange={(e) => setTime(e.target.value)} className="rounded-input border border-border bg-surface px-3" aria-label="When">
@@ -293,7 +293,7 @@ function MedicinesStep({ d, set, name }: { d: Draft; set: (p: Partial<Draft>) =>
           </li>
         ))}
       </ul>
-      <p className="text-sm text-muted">A photo of the prescription is for your own reference and is never sent to Haalo&apos;s AI.</p>
+      <p className="text-sm text-muted">A photo of the prescription is for your own reference and is never sent to Sneha&apos;s AI.</p>
     </Section>
   );
 }
@@ -319,7 +319,7 @@ function LovesStep({ d, set, name }: { d: Draft; set: (p: Partial<Draft>) => voi
         </Button>
       </div>
       <div>
-        <p className="mb-2 text-sm font-medium">Key family names (so Haalo says them right)</p>
+        <p className="mb-2 text-sm font-medium">Key family names (so Sneha says them right)</p>
         <div className="flex gap-2">
           <Input value={frel} onChange={(e) => setFrel(e.target.value)} placeholder="grandson" />
           <Input value={fname} onChange={(e) => setFname(e.target.value)} placeholder="Aarav" />

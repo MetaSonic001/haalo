@@ -18,9 +18,11 @@ interface Props {
   latest: { id: string; started_at: string | null; duration_s: number | null; summary: CallSummaryRow | null } | null;
   medicines: Medicine[];
   callTime: string;
+  /** Demo workspace: parents have made-up numbers, so "call now" opens the browser-based live demo instead. */
+  workspace?: boolean;
 }
 
-export function StatusCard({ parent, latest, medicines, callTime }: Props) {
+export function StatusCard({ parent, latest, medicines, callTime, workspace = false }: Props) {
   const [pending, start] = useTransition();
   const [calling, setCalling] = useState(false);
   const toast = useToast();
@@ -33,7 +35,7 @@ export function StatusCard({ parent, latest, medicines, callTime }: Props) {
     setCalling(true);
     start(async () => {
       const res = await callNow(parent.id);
-      if (res.ok) toast(`Haalo is calling ${name} now.`);
+      if (res.ok) toast(`Sneha is calling ${name} now.`);
       else toast(res.error.message, "danger");
       setTimeout(() => setCalling(false), 4000);
     });
@@ -102,12 +104,12 @@ export function StatusCard({ parent, latest, medicines, callTime }: Props) {
           <Orb size={96} state="idle" className="shrink-0" />
           <div>
             <h2 id="status-h" className="display text-[25px]">
-              {parent.consent_status === "declined" ? `${name} asked us not to call` : `Haalo will call ${name} at ${callTime} tomorrow.`}
+              {parent.consent_status === "declined" ? `${name} asked us not to call` : `Sneha will call ${name} at ${callTime} tomorrow.`}
             </h2>
             <p className="prose-limit mt-1 text-muted">
               {parent.consent_status === "declined"
-                ? "Haalo has stopped calling. You may want to talk with them first."
-                : "You'll get a summary here. The first call introduces Haalo as an AI assistant and asks for their permission."}
+                ? "Sneha has stopped calling. You may want to talk with them first."
+                : "You'll get a summary here. The first call introduces Sneha as an AI assistant and asks for their permission."}
             </p>
           </div>
         </div>
@@ -115,10 +117,11 @@ export function StatusCard({ parent, latest, medicines, callTime }: Props) {
 
       {parent.consent_status !== "declined" ? (
         <div className="mt-6 border-t border-border pt-6">
-          <Button size="lg" onClick={onCall} disabled={pending || calling} className="w-full sm:w-auto">
-            {calling ? <Orb size={28} state="connecting" className="-ml-1" /> : <PhoneCall className="size-5" />}
-            {calling ? `Calling ${name}` : `Call ${name} now`}
-          </Button>
+            <Button size="lg" onClick={onCall} disabled={pending || calling} className="w-full sm:w-auto">
+              {calling ? <Orb size={28} state="connecting" className="-ml-1" /> : <PhoneCall className="size-5" />}
+              {calling ? `Calling ${name}` : `Call ${name} now`}
+            </Button>
+
         </div>
       ) : null}
     </section>

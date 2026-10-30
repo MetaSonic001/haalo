@@ -73,7 +73,7 @@ function TurnRow({ t }: { t: CallTurn }) {
   return (
     <li className="grid grid-cols-[5.5rem_1fr_auto] items-start gap-3 rounded-row bg-bg px-3 py-2">
       <div className="text-xs text-muted">
-        <p className="font-semibold">{t.speaker === "parent" ? "Parent" : "Haalo"}</p>
+        <p className="font-semibold">{t.speaker === "parent" ? "Parent" : "Sneha"}</p>
         <p>{t.started_ms != null ? `${(t.started_ms / 1000).toFixed(1)}s` : ""}</p>
         {t.latency_ms != null ? <p className={cn(slow && "font-semibold text-danger")}>{t.latency_ms} ms</p> : null}
       </div>

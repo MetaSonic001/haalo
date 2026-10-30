@@ -6,10 +6,11 @@ export const fmtTime = (iso: string | null | undefined) =>
 export function fmtDay(iso: string | null | undefined): string {
   if (!iso) return "";
   const d = new Date(iso);
-  const days = Math.round((Date.now() - d.getTime()) / 86_400_000);
-  const day = new Date(d.toLocaleString("en-US", { timeZone: tz })).getDate() === new Date(Date.now()).getDate();
-  if (day && days < 1) return "Today";
-  if (days < 2 && !day) return "Yesterday";
+  const ymd = (x: Date) => new Intl.DateTimeFormat("en-CA", { timeZone: tz }).format(x);
+  const dayGap = Math.round((new Date(ymd(d)).getTime() - new Date(ymd(new Date())).getTime()) / 86_400_000);
+  if (dayGap === 1) return "Tomorrow";
+  if (dayGap === 0) return "Today";
+  if (dayGap === -1) return "Yesterday";
   return new Intl.DateTimeFormat("en-IN", { weekday: "short", day: "numeric", month: "short", timeZone: tz }).format(d);
 }
 

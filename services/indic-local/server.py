@@ -1,4 +1,4 @@
-"""Self-hosted Indic STT for Haalo (provider `indic_local`). MIT-licensed AI4Bharat IndicConformer, CPU-friendly, no Docker.
+"""Self-hosted Indic STT for Sneha (provider `indic_local`). MIT-licensed AI4Bharat IndicConformer, CPU-friendly, no Docker.
 
     cd services/indic-local
     uv sync

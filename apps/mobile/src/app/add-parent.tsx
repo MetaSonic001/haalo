@@ -134,20 +134,20 @@ export default function AddParent() {
             <Display size={fs(26)}>Who are we calling?</Display>
             <Field label="Their name" value={d.name ?? ""} onChange={(v) => set({ name: v })} placeholder="Shobha" error={errors.name} />
             <View style={{ gap: 8 }}>
-              <T weight="semi" size={14}>How Haalo should address them</T>
+              <T weight="semi" size={14}>How Sneha should address them</T>
               <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 8 }}>
                 {lang.honorifics.map((h) => <Pill key={h} on={d.honorific === h} onPress={() => set({ honorific: h })}>{h}</Pill>)}
               </View>
               <Field label="Or type your own" value={d.honorific ?? ""} onChange={(v) => set({ honorific: v })} error={errors.honorific} />
             </View>
-            <Field label="Your name, as they know you" value={d.child_name ?? ""} onChange={(v) => set({ child_name: v })} placeholder="Riya" hint="Haalo says the name you enter here on the first call." />
+            <Field label="Your name, as they know you" value={d.child_name ?? ""} onChange={(v) => set({ child_name: v })} placeholder="Riya" hint="Sneha says the name you enter here on the first call." />
             <Field label="Their phone number" value={d.phone_e164 ?? ""} onChange={(v) => set({ phone_e164: v.replace(/[\s-]/g, "") })} keyboard="phone-pad" error={errors.phone_e164} hint="With the country code, e.g. +91 98765 43210" />
           </>
         )}
         {step === 1 && (
           <>
             <Display size={fs(26)}>Which language do they think in?</Display>
-            <T muted>Tap a voice to hear how Haalo will greet them.</T>
+            <T muted>Tap a voice to hear how Sneha will greet them.</T>
             <View style={{ gap: 8 }}>
               {selectableLanguages.map((l) => (
                 <Pressable key={l.code} onPress={() => set({ language: l.code, honorific: l.honorifics.includes(d.honorific ?? "") ? d.honorific : undefined })} accessibilityRole="button" accessibilityState={{ selected: d.language === l.code }}>
@@ -169,7 +169,7 @@ export default function AddParent() {
         {step === 2 && (
           <>
             <Display size={fs(26)}>When is a good time?</Display>
-            <T muted>{`Haalo will call ${who} once a day inside this window.`}</T>
+            <T muted>{`Sneha will call ${who} once a day inside this window.`}</T>
             <View style={{ flexDirection: "row", gap: 12 }}>
               <View style={{ flex: 1 }}><Field label="Earliest (24h)" value={d.window_start ?? ""} onChange={(v) => set({ window_start: v })} error={errors.window_start} placeholder="09:00" /></View>
               <View style={{ flex: 1 }}><Field label="Latest (24h)" value={d.window_end ?? ""} onChange={(v) => set({ window_end: v })} error={errors.window_end} placeholder="10:30" /></View>
@@ -183,7 +183,7 @@ export default function AddParent() {
         {step === 3 && (
           <>
             <Display size={fs(26)}>Any medicines to ask about?</Display>
-            <T muted>{`Haalo will gently ask whether ${who} has taken them. It never gives medical advice. You can skip this.`}</T>
+            <T muted>{`Sneha will gently ask whether ${who} has taken them. It never gives medical advice. You can skip this.`}</T>
             <View style={{ flexDirection: "row", gap: 8, alignItems: "flex-end" }}>
               <View style={{ flex: 1 }}><Field label="Medicine" value={med} onChange={setMed} placeholder="BP tablet" /></View>
               <Button title="Add" icon={Plus} variant="secondary" onPress={() => { if (med.trim()) { set({ medicines: [...d.medicines, { name: med.trim(), times: ["morning"] }] }); setMed(""); } }} />
@@ -194,7 +194,7 @@ export default function AddParent() {
                 <Pressable accessibilityLabel={`Remove ${m.name}`} onPress={() => set({ medicines: d.medicines.filter((_, j) => j !== i) })}><X size={18} color={t.textMuted} /></Pressable>
               </Row>
             ))}
-            <T muted size={13}>A photo of the prescription is for your own reference and is never sent to Haalo&apos;s AI.</T>
+            <T muted size={13}>A photo of the prescription is for your own reference and is never sent to Sneha&apos;s AI.</T>
           </>
         )}
         {step === 4 && (
@@ -214,7 +214,7 @@ export default function AddParent() {
         {step === 5 && (
           <>
             <Display size={fs(26)}>Ready to schedule the first call?</Display>
-            <T muted>{`The first call introduces Haalo as an AI assistant set up by you, and asks ${who} for permission. If they say no, calls stop and you'll be told.`}</T>
+            <T muted>{`The first call introduces Sneha as an AI assistant set up by you, and asks ${who} for permission. If they say no, calls stop and you'll be told.`}</T>
             {[
               ["Name", `${d.name} (${d.honorific})`], ["Phone", d.phone_e164 ?? ""], ["Language", `${lang.native_name}, ${d.voice_gender} voice`],
               ["Calls", `${d.window_start} to ${d.window_end}, ${d.days_of_week?.length === 7 ? "every day" : d.days_of_week?.map((i) => DAYS[i]).join(", ")}`],

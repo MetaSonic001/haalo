@@ -18,6 +18,7 @@ from pipecat.audio.vad.vad_analyzer import VADParams
 from pipecat.frames.frames import (
     EndTaskFrame,
     FunctionCallResultProperties,
+    LLMContextFrame,
     LLMFullResponseEndFrame,
     LLMFullResponseStartFrame,
     LLMMessagesAppendFrame,
@@ -41,7 +42,9 @@ from pipecat.turns.user_stop import SpeechTimeoutUserTurnStopStrategy
 from pipecat.turns.user_turn_strategies import UserTurnStrategies
 from pipecat.workers.runner import WorkerRunner
 
+from . import vitals as vt
 from .config import Settings
+from .doses import match_medicine
 from .languages import get_language
 from .llm import build_conversation_llm
 from .prompt import build_system_prompt
@@ -72,6 +75,32 @@ def _tools() -> ToolsSchema:
                 required=["kind"],
             ),
             FunctionSchema(
+                name="confirm_dose",
+                description="Record that the person took (taken=true) or has not yet taken (taken=false) one of their medicines.",
+                properties={
+                    "medicine": {"type": "string", "description": "the medicine name from your notes"},
+                    "taken": {"type": "boolean"},
+                },
+                required=["medicine", "taken"],
+            ),
+            FunctionSchema(
+                name="log_vital",
+                description="Save a health reading the person told you, after repeating it back and hearing them agree.",
+                properties={
+                    "kind": {"type": "string", "enum": ["bp", "sugar", "weight", "temperature", "spo2", "pulse"]},
+                    "value": {"type": "number", "description": "bp: the top (systolic) number"},
+                    "value2": {"type": "number", "description": "bp only: the bottom (diastolic) number"},
+                    "context": {"type": "string", "description": "optional, e.g. fasting or after meal"},
+                },
+                required=["kind", "value"],
+            ),
+            FunctionSchema(
+                name="request_family_help",
+                description="Alert the family now because the person asked for them or needs help.",
+                properties={"reason": {"type": "string", "description": "short reason in English"}},
+                required=["reason"],
+            ),
+            FunctionSchema(
                 name="end_call",
                 description="Hang up after a warm goodbye.",
                 properties={"reason": {"type": "string", "enum": ["completed", "wants_to_stop", "consent_declined"]}},
@@ -80,6 +109,10 @@ def _tools() -> ToolsSchema:
         ]
     )
 
+
+# Some chat templates (Qwen) refuse a context with no user message. When the agent opens the call itself, this cue is the user turn;
+# it is never part of the stored transcript.
+CALL_CONNECTED = "(call connected)"
 
 # Whisper invents these on silence / background noise.
 _HALLUCINATIONS = {"you", "thank you", "thanks", "thanks for watching", "bye", "okay", "ok", "hmm", "uh", "um", "the", "so", "yeah", "mm", "ah"}
@@ -105,15 +138,44 @@ class TranscriptFilter(FrameProcessor):
         await self.push_frame(frame, direction)
 
 
+class FamilyMessageNudge(FrameProcessor):
+    """Makes sure the family's messages are really passed on. The prompt asks the model to deliver them right after the first
+    exchange, but models drift; so on each of the parent's first turns one pending message is added to the context as a plain instruction."""
+
+    def __init__(self, context: LLMContext, messages: list):
+        super().__init__()
+        self._ctx = context
+        self._pending = list(messages)
+        self._turns = 0
+
+    async def process_frame(self, frame, direction):
+        await super().process_frame(frame, direction)
+        if isinstance(frame, LLMContextFrame) and self._pending:
+            last = self._ctx.messages[-1] if self._ctx.messages else {}
+            if last.get("role") == "user" and last.get("content") != CALL_CONNECTED:
+                self._turns += 1
+            if self._turns >= 2 and last.get("role") == "user" and last.get("content") != CALL_CONNECTED:
+                # not on the very first answer ("I'm fine"): the model handles that one itself, then one message per turn
+                m = self._pending.pop(0)
+                who = m.from_name or "a family member"
+                if m.kind == "note":
+                    todo = f'First react to what they just said in one short sentence. Then pass on this message from {who}, warmly, in your own words, saying who it is from: "{m.body}"'
+                else:
+                    todo = f'First react to what they just said in one short sentence. Then ask them this question from {who}, naturally: "{m.body}"'
+                self._ctx.add_message({"role": "system", "content": f"NOW: {todo} Say nothing else in this reply."})
+        await self.push_frame(frame, direction)
+
+
 class AssistantMemory(FrameProcessor):
     """Records what the LLM says into the conversation context, so it remembers its own replies.
 
     Pipecat's own assistant aggregation relies on the TTS emitting spoken-text frames; that is provider-dependent, and when it does not
     happen the model loses all memory of what it said. Doing this here works with every TTS provider."""
 
-    def __init__(self, context: LLMContext):
+    def __init__(self, context: LLMContext, session: CallSession | None = None):
         super().__init__()
         self._ctx = context
+        self._session = session
         self._buf: list[str] = []
 
     async def process_frame(self, frame, direction):
@@ -127,6 +189,10 @@ class AssistantMemory(FrameProcessor):
             self._buf = []
             if text:
                 self._ctx.add_message({"role": "assistant", "content": text})
+                if self._session:
+                    self._session.emit("agent", text)
+        elif isinstance(frame, TTSSpeakFrame) and self._session:
+            self._session.emit("agent", frame.text)  # scripted lines (opening, emergency, scam warning)
         await self.push_frame(frame, direction)
 
 
@@ -136,7 +202,7 @@ def _rebuild_turns(session: CallSession, context: LLMContext) -> None:
     turns: list[dict] = []
     for m in context.messages:
         role, content = m.get("role"), m.get("content")
-        if role not in ("user", "assistant") or not isinstance(content, str) or not content.strip():
+        if role not in ("user", "assistant") or not isinstance(content, str) or not content.strip() or content == CALL_CONNECTED:
             continue
         turns.append({"speaker": "parent" if role == "user" else "agent", "text": content.strip(), "t": session.started_at + len(turns)})
     if turns:
@@ -154,11 +220,14 @@ async def run_call(
     telephony: bool,
     on_finished: OnFinished | None = None,
     max_seconds: int | None = None,
+    escalator=None,
 ) -> str:
     """Runs one call to completion. Returns final status (completed | no_response | failed)."""
     p = session.profile
     lang = get_language(p.language)
     log = logger.bind(call_id=session.call_id)
+    if session.purpose == "reminder":
+        max_seconds = max_seconds or 180  # a reminder is a minute or two, never a long call
     fmt = {"honorific": p.honorific, "child": p.child_name, "time": p.next_call_time}
 
     system_prompt, persona_version = build_system_prompt(session, s.llm_prompt_token_budget)
@@ -189,10 +258,14 @@ async def run_call(
     async def on_flag(flag: dict) -> None:
         await store.add_flag(session, flag)
         sev = flag["severity"]
+        if sev == "emergency" and escalator and not p.is_demo:
+            session.emit("alert", "Alert ladder started: the whole family is notified, then emergency contacts in order.")
+            quote = flag["evidence_quote"]
+            await escalator.start(p.parent_id, "emergency", f"{p.honorific} said: \"{quote}\" ({flag['category'].replace('_', ' ')}).", call_id=session.call_id)
         if sev in ("high", "emergency"):
             await store.notify_family(
                 p.parent_id, "flag", f"{p.honorific}: {flag['category'].replace('_', ' ')} mentioned",
-                f"\"{flag['evidence_quote']}\" - Haalo has flagged this. Please call {p.honorific}.",
+                f"\"{flag['evidence_quote']}\" - Sneha has flagged this. Please call {p.honorific}.",
                 {"flag_category": flag["category"], "call_id": session.call_id, "severity": sev, "url": "/alerts"}, pref="emergency",
             )
 
@@ -200,7 +273,7 @@ async def run_call(
 
     record = p.recording_consent and not p.is_demo  # audio is opt-in per parent; default is transcripts only
     audio_buf = AudioBufferProcessor(num_channels=2) if record else None
-    stages = [transport.input(), stt, TranscriptFilter(lang.code), safety, user_agg, llm, AssistantMemory(context), tts, transport.output()]
+    stages = [transport.input(), stt, TranscriptFilter(lang.code), safety, user_agg, FamilyMessageNudge(context, p.messages), llm, AssistantMemory(context, session), tts, transport.output()]
     if audio_buf:
         stages.append(audio_buf)
     pipeline = Pipeline([*stages, asst_agg])
@@ -245,7 +318,7 @@ async def run_call(
         if not granted:
             await store.notify_family(
                 p.parent_id, "consent", f"{p.honorific} declined the daily calls",
-                "Haalo won't call again unless you change this. You may want to talk to them first.", {"call_id": session.call_id}, pref="summary",
+                "Sneha won't call again unless you change this. You may want to talk to them first.", {"call_id": session.call_id}, pref="summary",
             )
         else:
             p.consent_status = "granted"
@@ -263,7 +336,94 @@ async def run_call(
         state["status"] = "completed"
         await params.llm.push_frame(EndTaskFrame(), FrameDirection.UPSTREAM)
 
+    async def confirm_dose(params):
+        name, taken = str(params.arguments.get("medicine", "")), bool(params.arguments.get("taken"))
+        session.doses_confirmed.append({"medicine": name, "taken": taken})
+        if not taken:
+            await params.result_callback({"ok": True, "note": "noted as not yet taken; the family is told only if it stays unconfirmed"})
+            return
+        via = {"reminder": "reminder_call", "inbound": "inbound"}.get(session.purpose, "call")
+        open_names = [d.medicine for d in p.doses_today if d.status != "taken"] or [m.name for m in p.medicines]
+        matched = match_medicine(name, open_names)
+        if matched is None:
+            await params.result_callback({"ok": False, "note": "that medicine is not due or is already confirmed"})
+            return
+        for d in p.doses_today:
+            if d.medicine == matched and d.status != "taken":
+                d.status = "taken"
+                break
+        session.emit("action", f"Dose confirmed: {matched}")
+        # The model gets its answer straight away; the database write and the family notice happen alongside the conversation.
+        await params.result_callback({"ok": True, "matched": matched})
+        if p.is_demo:
+            return
+
+        async def persist() -> None:
+            try:
+                hit = await store.confirm_dose(p.parent_id, matched, p.timezone, via=via, call_id=session.call_id)
+                if hit and session.purpose == "reminder":
+                    await store.notify_family(p.parent_id, "dose", f"{p.honorific} took {hit['medicine']}", "Confirmed on Sneha's reminder call.", {"call_id": session.call_id, "url": "/medicines"}, pref="summary")
+                if hit and hit.get("refill"):
+                    await store.notify_family(p.parent_id, "reminder", f"{hit['medicine']} is running low", f"{p.honorific}'s supply is about five days from running out.", {"url": "/medicines"}, pref="summary")
+            except Exception as e:  # noqa: BLE001 - a failed write is retried by the post-call safety net
+                log.warning(f"confirm_dose persist failed: {e}")
+
+        background.add(t := asyncio.create_task(persist()))
+        t.add_done_callback(background.discard)
+
+    background: set[asyncio.Task] = set()
+
+    async def log_vital(params):
+        a = params.arguments
+        try:
+            kind = str(a.get("kind", "")).lower()
+            if kind not in vt.KINDS:
+                raise ValueError("unknown kind")
+            value, value2 = vt.normalize(kind, float(a["value"]), float(a["value2"]) if a.get("value2") is not None else None)
+            if kind == "bp" and value2 is None:
+                await params.result_callback({"saved": False, "note": "a blood pressure needs both numbers; ask for the bottom number"})
+                return
+        except (KeyError, TypeError, ValueError):
+            await params.result_callback({"saved": False, "note": "could not understand that reading; ask them to say it again"})
+            return
+        verdict = vt.evaluate(kind, value, value2, p.vital_ranges)
+        session.emit("action", f"Reading saved: {vt.LABELS[kind]} {vt.describe(kind, value, value2)}" + (" (outside the family's range)" if verdict.flagged else ""))
+        session.vitals_logged.append({"kind": kind, "value": value, "value2": value2, "flagged": verdict.flagged})
+        say = "tell them you have noted it and will let the family know" if verdict.flagged else "tell them you have noted it"
+        await params.result_callback({"saved": True, "outside_family_range": verdict.flagged, "say": say})
+        if p.is_demo:
+            return
+
+        async def persist() -> None:
+            try:
+                await store.log_vital(p.parent_id, kind, value, value2, vt.UNITS[kind], context=str(a.get("context", "")), source="call", call_id=session.call_id, flagged=verdict.flagged)
+                if verdict.flagged:
+                    flag = {"category": f"vitals_{kind}", "severity": verdict.severity, "evidence_quote": vt.describe(kind, value, value2), "source": "vitals"}
+                    session.flags.append(flag)
+                    await on_flag(flag)
+                    if verdict.severity == "medium":
+                        await store.notify_family(
+                            p.parent_id, "vital", f"{p.honorific}: {verdict.reason}", "Sneha only noted the number and did not give advice. You may want to call.",
+                            {"call_id": session.call_id, "url": "/health"}, pref="summary",
+                        )
+            except Exception as e:  # noqa: BLE001
+                log.warning(f"log_vital persist failed: {e}")
+
+        background.add(t := asyncio.create_task(persist()))
+        t.add_done_callback(background.discard)
+
+    async def request_family_help(params):
+        session.help_requested = True
+        session.emit("alert", "They asked for the family. Alerting everyone now.")
+        reason = str(params.arguments.get("reason", "")) or "They asked for help."
+        if escalator and not p.is_demo:
+            await escalator.start(p.parent_id, "parent_request", f"{p.honorific} asked Sneha to alert the family: {reason}", call_id=session.call_id)
+        await params.result_callback({"ok": True, "say": "tell them you are informing the family right now"})
+
     llm.register_function("record_consent", record_consent)
+    llm.register_function("confirm_dose", confirm_dose)
+    llm.register_function("log_vital", log_vital)
+    llm.register_function("request_family_help", request_family_help)
     llm.register_function("set_preference", set_preference)
     llm.register_function("end_call", end_call)
 
@@ -337,14 +497,21 @@ async def run_call(
         first = "consent" if p.consent_status == "pending" else "greeting"
         if audio_buf:
             await audio_buf.start_recording()
-        opening = lang.say(first, **fmt)
-        context.add_message({"role": "assistant", "content": opening})  # the model must know it already greeted / asked consent
-        await worker.queue_frame(TTSSpeakFrame(opening, append_to_context=False))
+        if session.purpose in ("reminder", "inbound") and first == "greeting":
+            # Not the standard daily greeting: the model opens the call itself, following the mode instructions in its prompt.
+            await worker.queue_frame(LLMMessagesAppendFrame([{"role": "user", "content": CALL_CONNECTED}], run_llm=True))
+        else:
+            opening = lang.say(first, **fmt)
+            context.add_message({"role": "assistant", "content": opening})  # the model must know it already greeted / asked consent
+            await worker.queue_frame(TTSSpeakFrame(opening, append_to_context=False))
         watchdog_task = asyncio.create_task(watchdog())
+
+    disconnected = asyncio.Event()
 
     @transport.event_handler("on_client_disconnected")
     async def _disconnected(_t, _client):
         log.info("client disconnected")
+        disconnected.set()
         await worker.cancel()
 
     await store.update_call(
@@ -354,7 +521,21 @@ async def run_call(
     try:
         runner = WorkerRunner(handle_sigint=False)
         await runner.add_workers(worker)
-        await runner.run()
+        run_task = asyncio.create_task(runner.run())
+        gone = asyncio.create_task(disconnected.wait())
+        await asyncio.wait({run_task, gone}, return_when=asyncio.FIRST_COMPLETED)
+        if not run_task.done():
+            # The caller hung up. The pipeline normally winds down by itself; if it hangs (a TTS request mid-flight), do not
+            # lose the call: give it a few seconds, then stop it so the transcript, summary and notifications still happen.
+            try:
+                await asyncio.wait_for(asyncio.shield(run_task), 6)
+            except asyncio.TimeoutError:
+                log.warning("pipeline did not stop after hang-up, cancelling it")
+                run_task.cancel()
+                await asyncio.gather(run_task, return_exceptions=True)
+        gone.cancel()
+        if run_task.done() and not run_task.cancelled() and run_task.exception():
+            raise run_task.exception()
     except Exception as e:
         log.exception(f"call crashed: {e}")
         state["status"] = "failed"
@@ -367,6 +548,9 @@ async def run_call(
                 await audio_buf.stop_recording()
             except Exception as e:  # noqa: BLE001 - a failed recording must never break call cleanup
                 log.warning(f"recording stop failed: {e}")
+        session.end_feed()
+        if background:
+            await asyncio.gather(*background, return_exceptions=True)
         status = state["status"]
         _rebuild_turns(session, context)
         await store.finish_call(session, status)

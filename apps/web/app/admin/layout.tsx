@@ -20,7 +20,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
       <header className="flex flex-wrap items-center gap-x-6 gap-y-2 border-b border-border py-5">
         <Link href="/admin" className="flex items-center gap-2.5">
           <LogoMark className="size-7" />
-          <span className="display text-lg">Haalo admin</span>
+          <span className="display text-lg">Heartline admin</span>
         </Link>
         <nav aria-label="Admin" className="flex flex-wrap gap-4 text-sm font-medium text-muted">
           {links.map((l) => (

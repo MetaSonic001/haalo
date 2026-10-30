@@ -83,6 +83,7 @@ async def main() -> None:
     ap.add_argument("--lang", default="mr")
     ap.add_argument("--say", required=True, help="parent lines separated by |")
     ap.add_argument("--parent", default=None, help="dev_parent_id: talk as a real parent profile from the DB")
+    ap.add_argument("--mode", default="checkin", choices=["checkin", "reminder", "inbound"])
     ap.add_argument("--out", default="evals/out/agent.wav")
     ap.add_argument("--max-wait", type=float, default=60)
     a = ap.parse_args()
@@ -120,6 +121,7 @@ async def main() -> None:
     while pc.iceGatheringState != "complete":
         await asyncio.sleep(0.1)
     body = {"sdp": pc.localDescription.sdp, "type": pc.localDescription.type, "language": a.lang}
+    body["mode"] = a.mode
     if a.parent:
         body["dev_parent_id"] = a.parent
     async with httpx.AsyncClient(timeout=30) as c:
@@ -142,14 +144,13 @@ async def main() -> None:
     print(f"agent opening line finished: {ok}  ({len(agent_pcm) / 2 / RATE:.1f}s of audio so far)")
     for i, (text, pcm) in enumerate(zip(lines, pcm_lines, strict=True)):
         print(f"parent[{i}]: {text}")
-        state["agent_started"] = False
         track.say(pcm)
         # start the latency clock when our speech ends
         await asyncio.sleep(len(pcm) / 2 / RATE)
         state["spoke_at"] = time.perf_counter()
-        # give the agent time to start, then wait for it to finish
+        state["agent_started"] = False  # only a reply that begins after we finished speaking counts
         await asyncio.sleep(1.5)
-        if not await agent_quiet(min_quiet=2.5):
+        if not await agent_quiet(min_quiet=3.0):
             print("  (agent did not respond in time)")
     await asyncio.sleep(1.0)
     await pc.close()
@@ -161,12 +162,15 @@ async def main() -> None:
         w.writeframes(bytes(agent_pcm))
     await asyncio.sleep(4)  # let the server finish and persist the call
     try:
-        from haalo_voice.config import get_settings
         from supabase import create_client
+
+        from haalo_voice.config import get_settings
 
         st = get_settings()
         db = create_client(st.supabase_url, st.supabase_service_role_key)
-        call = db.table("calls").select("id").eq("demo", True).order("created_at", desc=True).limit(1).execute().data
+        q = db.table("calls").select("id")
+        q = q.eq("parent_id", a.parent) if a.parent else q.eq("demo", True)
+        call = q.order("created_at", desc=True).limit(1).execute().data
         if call:
             for t in db.table("call_turns").select("speaker,text").eq("call_id", call[0]["id"]).order("id").execute().data:
                 print(f"  [{t['speaker']:6}] {t['text']}")

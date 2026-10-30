@@ -9,7 +9,7 @@ export function Footer() {
         <div className="flex items-center gap-3">
           <LogoMark className="size-7" />
           <p>
-            <span className="font-semibold text-text">Haalo</span> · {PRODUCT.taglineLocal}
+            <span className="font-semibold text-text">Heartline</span> · {PRODUCT.taglineLocal}
           </p>
         </div>
         <nav aria-label="Legal" className="flex gap-6">

@@ -1,18 +1,18 @@
-# Haalo
+# Heartline
 
 ## Overview
 
-Haalo phones a family's elderly parents every day in their own language (Marathi, Hindi, Indian English at launch),
+Heartline phones a family's elderly parents (the AI voice is named Sneha) every day in their own language (Marathi, Hindi, Indian English at launch),
 chats warmly, checks medicines, meals, sleep and mood, and sends the adult child a short summary. Anything alarming
 (fall, chest pain, confusion, scam call, distress, repeated missed calls) alerts the family immediately.
 Tagline: "A daily call for the people who raised you." Hindi/Marathi line: "Roz ka haal-chaal, unki bhasha mein."
 
 ## Users and surfaces
 
-- Parent (60+): plain phone call (PSTN). Can call Haalo back. Nothing to install.
+- Parent (60+): plain phone call (PSTN). Can call Sneha back. Nothing to install.
 - Adult child (payer): Expo mobile app + web dashboard (`/app`).
 - Family circle: invited into the same parent profile.
-- Haalo team: internal `/admin`.
+- Heartline team: internal `/admin`.
 
 ## Non-negotiable product rules
 

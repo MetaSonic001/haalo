@@ -12,7 +12,7 @@ export default async function MemoryLane() {
   return (
     <div className="mx-auto max-w-3xl">
       <h1 className="display text-[31px] md:text-[39px]">Memory Lane</h1>
-      <p className="mb-8 mt-1 text-muted">Stories your parents told Haalo, kept for the family. Sharing needs their permission.</p>
+      <p className="mb-8 mt-1 text-muted">Stories your parents told Sneha, kept for the family. Sharing needs their permission.</p>
       {stories.length === 0 ? (
         <div className="flex flex-col items-center gap-4 rounded-card bg-surface p-10 text-center">
           <Orb size={96} />

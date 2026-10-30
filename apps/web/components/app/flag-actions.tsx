@@ -43,7 +43,7 @@ export function FlagList({ flags, parents }: { flags: Flag[]; parents: Record<st
         <h2 id="open-h" className="mb-3 text-xl font-semibold">
           Needs you {open.length ? `(${open.length})` : ""}
         </h2>
-        {open.length === 0 ? <p className="rounded-card bg-surface p-6 text-muted">Nothing needs your attention. Haalo will tell you the moment something does.</p> : null}
+        {open.length === 0 ? <p className="rounded-card bg-surface p-6 text-muted">Nothing needs your attention. Sneha will tell you the moment something does.</p> : null}
         <ul className="space-y-3">
           <AnimatePresence initial={false}>
             {open.map((f) => {

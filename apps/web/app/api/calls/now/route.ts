@@ -30,7 +30,7 @@ export async function POST(req: Request) {
       body: JSON.stringify({ parent_id: parent.id }),
       cache: "no-store",
     });
-    if (!res.ok) return NextResponse.json(fail("voice", "Haalo couldn't start the call right now. Please try again in a minute."), { status: 502 });
+    if (!res.ok) return NextResponse.json(fail("voice", "Sneha couldn't start the call right now. Please try again in a minute."), { status: 502 });
     return NextResponse.json(ok(await res.json()));
   } catch {
     return NextResponse.json(fail("voice", "We couldn't reach the calling service. Please try again in a minute."), { status: 502 });

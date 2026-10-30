@@ -3,11 +3,11 @@ import { expect, test } from "@playwright/test";
 test("landing: headline, languages, demo button reflects language", async ({ page }) => {
   await page.goto("/");
   await expect(page.getByRole("heading", { level: 1 })).toHaveText("A daily call for the people who raised you.");
-  const demo = page.getByRole("button", { name: /Hear Haalo in Marathi/ });
+  const demo = page.getByRole("button", { name: /Hear Sneha in Marathi/ });
   await expect(demo).toBeVisible();
   await page.getByRole("radio", { name: "हिन्दी" }).click();
-  await expect(page.getByRole("button", { name: /Hear Haalo in Hindi/ })).toBeVisible();
-  await expect(page.getByRole("img", { name: "The Haalo orb" }).first()).toBeVisible();
+  await expect(page.getByRole("button", { name: /Hear Sneha in Hindi/ })).toBeVisible();
+  await expect(page.getByRole("img", { name: "The Sneha orb" }).first()).toBeVisible();
 });
 
 test("landing: no horizontal scroll and readable at phone width", async ({ page }) => {

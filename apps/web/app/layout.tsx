@@ -33,7 +33,7 @@ export const metadata: Metadata = {
   metadataBase: new URL(site),
   title: { default: `${PRODUCT.name}: ${PRODUCT.tagline}`, template: `%s | ${PRODUCT.name}` },
   description:
-    "Haalo calls your parents every morning in Marathi, Hindi or English, checks on medicines and mood, and sends you a two-line summary.",
+    "Heartline calls your parents every morning in Marathi, Hindi or English, checks on medicines and mood, and sends you a two-line summary.",
   openGraph: { title: PRODUCT.name, description: PRODUCT.tagline, type: "website", siteName: PRODUCT.name },
   twitter: { card: "summary_large_image" },
   icons: { icon: "/icon.svg" },

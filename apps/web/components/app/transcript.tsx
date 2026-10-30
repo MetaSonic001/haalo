@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils";
 type WithT = CallTurn & { translated_text?: string | null };
 
 /** Transcript is collapsed by default. Original text always available; English is generated once on demand and cached. */
-export function Transcript({ callId, turns, agentName = "Haalo", parentName }: { callId: string; turns: CallTurn[]; agentName?: string; parentName: string }) {
+export function Transcript({ callId, turns, agentName = "Sneha", parentName }: { callId: string; turns: CallTurn[]; agentName?: string; parentName: string }) {
   const [open, setOpen] = useState(false);
   const [translated, setTranslated] = useState(false);
   const [busy, setBusy] = useState(false);

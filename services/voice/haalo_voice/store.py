@@ -10,6 +10,7 @@ from typing import Any, Protocol
 import httpx
 from loguru import logger
 
+from .care_store import CareStoreMixin, NullCare
 from .config import Settings
 from .session import CallSession, Medicine, ParentProfile
 
@@ -55,7 +56,7 @@ class Store(Protocol):
     async def run_daily_jobs(self) -> None: ...
 
 
-class NullStore:
+class NullStore(NullCare):
     """Dev without a database: logs only."""
 
     async def load_parent(self, parent_id: str) -> ParentProfile | None:
@@ -111,7 +112,7 @@ class NullStore:
         return None
 
 
-class SupabaseStore:
+class SupabaseStore(CareStoreMixin):
     def __init__(self, s: Settings):
         from supabase import create_client
 
@@ -151,9 +152,9 @@ class SupabaseStore:
                 pdata = (prof.data or {}) if prof else {}
                 child = child or pdata.get("full_name", "")
                 fam_lang = pdata.get("app_language", "en")
-            return ctx, meds, mem, calls, fups, sched, child, fam_lang
+            return ctx, meds, mem, calls, fups, sched, child, fam_lang, self._care_profile_extras(row)
 
-        ctx, meds, mem, calls, fups, sched, child, fam_lang = await self._run(load)
+        ctx, meds, mem, calls, fups, sched, child, fam_lang, extras = await self._run(load)
         c = (ctx.data if ctx else None) or {}
         summaries = []
         for r in calls.data or []:
@@ -188,6 +189,11 @@ class SupabaseStore:
             next_call_time=str(window.get("window_start", "09:00"))[:5].lstrip("0") or "9:00",
             timezone=row.get("call_timezone", "Asia/Kolkata"),
             family_language=_lang_name(fam_lang),
+            sandbox=bool(row.get("is_demo")),
+            tradition=row.get("tradition") or "",
+            birthday=row.get("birthday"),
+            vital_ranges=row.get("vital_ranges") or {},
+            **extras,
         )
 
     # ---- Store API
@@ -210,7 +216,8 @@ class SupabaseStore:
             "provider_call_id": session.provider_call_id,
             "language": session.profile.language,
             "demo": session.profile.is_demo,
-            "is_consent_call": session.profile.consent_status == "pending",
+            "is_consent_call": session.profile.consent_status == "pending" and session.purpose == "checkin",
+            "purpose": session.purpose,
         }
         await self._run(lambda: self._db.table("calls").upsert(row).execute())
         return session.call_id
@@ -416,7 +423,7 @@ class SupabaseStore:
     async def consecutive_missed_days(self, parent_id: str) -> int:
         r = await self._run(
             lambda: self._db.table("calls").select("status,created_at").eq("parent_id", parent_id)
-            .eq("direction", "outbound").order("created_at", desc=True).limit(10).execute()
+            .eq("direction", "outbound").eq("purpose", "checkin").order("created_at", desc=True).limit(10).execute()
         )
         days: dict[str, bool] = {}
         for row in r.data or []:

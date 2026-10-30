@@ -3,7 +3,7 @@ import { Slot } from "@radix-ui/react-slot";
 import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
-/** shadcn-style primitive restyled to Haalo tokens. Primary = marigold fill with ink text (AA). */
+/** shadcn-style primitive restyled to Heartline tokens. Primary = marigold fill with ink text (AA). */
 const button = cva(
   "inline-flex select-none items-center justify-center gap-2 whitespace-nowrap rounded-full font-medium transition-[background-color,transform,box-shadow] duration-150 ease-out-soft active:scale-[0.98] disabled:pointer-events-none disabled:opacity-50",
   {

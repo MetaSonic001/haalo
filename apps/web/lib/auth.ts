@@ -3,6 +3,7 @@ import { auth, currentUser } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import { adminClient } from "./supabase/admin";
 import { clerkConfigured } from "./supabase/config";
+import { DEMO_USER_ID, isDemoSession } from "./demo";
 
 export interface Viewer {
   /** Clerk user id, e.g. "user_2abc...". Also the id used in Supabase rows and RLS (auth.jwt() ->> 'sub'). */
@@ -14,9 +15,12 @@ export interface Viewer {
 }
 
 const DEMO: Viewer = { id: "demo-user", email: "riya@example.com", name: "Riya", isAdmin: true, demo: true };
+/** The demo workspace visitor: Riya, owner of the sandbox family. Never an admin. */
+const WORKSPACE: Viewer = { id: DEMO_USER_ID, email: "riya@demo.haalo", name: "Rohan", isAdmin: false, demo: true };
 
 /** Current user, or null. With no Clerk keys in local dev, returns a demo viewer so the UI is reviewable. */
 export async function getViewer(): Promise<Viewer | null> {
+  if (await isDemoSession()) return WORKSPACE;
   if (!clerkConfigured) return process.env.NODE_ENV === "production" ? null : DEMO;
   const { userId } = await auth();
   if (!userId) return null;

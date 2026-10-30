@@ -31,7 +31,7 @@ export const mockCalls: Call[] = [mkCall("c1", 0, "completed", 372), mkCall("c2"
 export const mockSummaries: Record<string, CallSummaryRow> = {
   c1: {
     call_id: "c1", created_at: iso(0, 9, 8), mood: "good",
-    summary_for_family: "Aai sounded cheerful and took her BP tablet. She went to the temple with Shobha kaku. Her knee was a little sore in the evening, so Haalo will ask again tomorrow.",
+    summary_for_family: "Aai sounded cheerful and took her BP tablet. She went to the temple with Shobha kaku. Her knee was a little sore in the evening, so Sneha will ask again tomorrow.",
     data: {
       mood: "good", meds: [{ name: "BP tablet", taken: true }, { name: "Calcium", taken: false, note: "Takes it in the evening" }], ate: true, slept: "well",
       complaints: ["knee pain"], highlights: ["Went to the temple with Shobha kaku", "Watching the cricket match tonight"],
@@ -47,7 +47,7 @@ export const mockSummaries: Record<string, CallSummaryRow> = {
 };
 
 export const mockTurns: CallTurn[] = [
-  { id: 1, call_id: "c1", speaker: "agent", text: "नमस्कार आई, मी हालो. कसे आहात आज?", started_ms: 0, latency_ms: null, corrected_text: null },
+  { id: 1, call_id: "c1", speaker: "agent", text: "नमस्कार आई, मी स्नेहा. कसे आहात आज?", started_ms: 0, latency_ms: null, corrected_text: null },
   { id: 2, call_id: "c1", speaker: "parent", text: "छान आहे रे. आज देवळात गेले होते.", started_ms: 6200, latency_ms: 760, corrected_text: null },
   { id: 3, call_id: "c1", speaker: "agent", text: "अरे वा! कोणासोबत गेला होतात?", started_ms: 10400, latency_ms: 690, corrected_text: null },
   { id: 4, call_id: "c1", speaker: "parent", text: "शोभा काकूंसोबत. गुडघा थोडा दुखतोय संध्याकाळी.", started_ms: 14300, latency_ms: 810, corrected_text: null },

@@ -3,7 +3,7 @@ import { getViewer } from "@/lib/auth";
 import { createServerSupabase } from "@/lib/supabase/server";
 import { liveMode } from "@/lib/supabase/config";
 
-/** One-tap export of everything Haalo holds about one parent. Runs under the viewer's RLS, so only family data is reachable. */
+/** One-tap export of everything Sneha holds about one parent. Runs under the viewer's RLS, so only family data is reachable. */
 export async function GET(req: Request) {
   const viewer = await getViewer();
   if (!viewer) return new NextResponse("Unauthorized", { status: 401 });

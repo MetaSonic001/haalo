@@ -87,6 +87,37 @@ class TwilioProvider(TelephonyProvider):
             reason = _ERROR_MAP.get(code or "", BlockReason.OTHER)
             raise DialError(reason, e.msg or str(e), code) from e
 
+    async def alert_call(self, *, to_e164: str, say_text: str, ack_url: str, language: str = "en-IN") -> str:
+        """Reads the alert twice; pressing 1 posts to ack_url (the escalation is then marked acknowledged)."""
+        from xml.sax.saxutils import escape
+
+        say = f'<Say language={quoteattr(language)} voice="Polly.Aditi">{escape(say_text)}</Say>'
+        twiml = (
+            '<?xml version="1.0" encoding="UTF-8"?><Response>'
+            f"<Gather numDigits=\"1\" action={quoteattr(ack_url)} method=\"POST\" timeout=\"8\">{say}</Gather>"
+            f"<Gather numDigits=\"1\" action={quoteattr(ack_url)} method=\"POST\" timeout=\"8\">{say}</Gather>"
+            "</Response>"
+        )
+
+        def _create() -> str:
+            return self._client.calls.create(to=to_e164, from_=self._s.twilio_phone_number, twiml=twiml, time_limit=120).sid
+
+        try:
+            return await asyncio.to_thread(_create)
+        except TwilioRestException as e:
+            code = str(e.code) if e.code else None
+            raise DialError(_ERROR_MAP.get(code or "", BlockReason.OTHER), e.msg or str(e), code) from e
+
+    async def send_sms(self, *, to_e164: str, body: str) -> str:
+        def _send() -> str:
+            return self._client.messages.create(to=to_e164, from_=self._s.twilio_phone_number, body=body[:600]).sid
+
+        try:
+            return await asyncio.to_thread(_send)
+        except TwilioRestException as e:
+            code = str(e.code) if e.code else None
+            raise DialError(_ERROR_MAP.get(code or "", BlockReason.OTHER), e.msg or str(e), code) from e
+
     def answer_document(self, *, media_ws_url: str, params: dict[str, str]) -> tuple[str, str]:
         return _twiml(media_ws_url, params), "application/xml"
 

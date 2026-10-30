@@ -4,6 +4,7 @@ import {
 } from "@haalo/db";
 import type { NewParent } from "@haalo/shared";
 import { config } from "./config";
+import { apiAct, apiGet } from "./api";
 import { accessToken, supabase } from "./supabase";
 
 export interface Member {
@@ -32,6 +33,7 @@ const sb = () => {
 };
 
 export async function loadFamily(userId: string): Promise<FamilyData> {
+  if (config.workspace) return apiGet<FamilyData>("family");
   if (config.demo) return { familyId: "f1", parents: [mockParent], members: mockMembers };
   const c = sb();
   const { data: m } = await c.from("family_members").select("family_id").eq("user_id", userId).limit(1);
@@ -62,6 +64,7 @@ function shapeCalls(rows: unknown[]): CallWithSummary[] {
 }
 
 export async function loadToday(parentId: string): Promise<TodayData> {
+  if (config.workspace) return apiGet<TodayData>("today", { parent: parentId });
   if (config.demo) {
     const recent = mockCalls.map((c) => ({ ...c, summary: mockSummaries[c.id] ?? null }));
     return {
@@ -90,6 +93,7 @@ export async function loadToday(parentId: string): Promise<TodayData> {
 }
 
 export async function loadCall(callId: string) {
+  if (config.workspace) return apiGet<{ call: Call; summary: CallSummaryRow | null; turns: CallTurn[]; parent: Parent }>("call", { id: callId });
   if (config.demo) {
     const call = mockCalls.find((c) => c.id === callId) ?? mockCalls[0]!;
     return { call, summary: mockSummaries[call.id] ?? null, turns: (call.id === "c1" ? mockTurns : []) as CallTurn[], parent: mockParent };
@@ -106,6 +110,7 @@ export async function loadCall(callId: string) {
 }
 
 export async function loadFlags(parentIds: string[]): Promise<Flag[]> {
+  if (config.workspace) return parentIds.length ? apiGet<Flag[]>("flags", { parents: parentIds.join(",") }) : [];
   if (config.demo) return mockFlags;
   if (!parentIds.length) return [];
   const { data } = await sb().from("flags").select("*").in("parent_id", parentIds).order("created_at", { ascending: false }).limit(100);
@@ -113,12 +118,14 @@ export async function loadFlags(parentIds: string[]): Promise<Flag[]> {
 }
 
 export async function setFlagStatus(flagId: string, status: "acknowledged" | "resolved", userId: string) {
+  if (config.workspace) return void (await apiAct("setFlagStatus", flagId, status));
   if (config.demo) return;
   const { error } = await sb().from("flags").update({ status, acknowledged_by: userId, acknowledged_at: new Date().toISOString() }).eq("id", flagId);
   if (error) throw new Error("We couldn't update that alert. Please try again.");
 }
 
 export async function callNow(parentId: string): Promise<void> {
+  if (config.workspace) return void (await apiAct("callNow", parentId)); // the demo family's phone rings in the browser
   if (config.demo) return;
   const token = await accessToken();
   if (!token) throw new Error("Please sign in again.");
@@ -128,7 +135,7 @@ export async function callNow(parentId: string): Promise<void> {
     body: JSON.stringify({ parent_id: parentId }),
   });
   const json = (await res.json().catch(() => null)) as { ok: boolean; error?: { message: string } } | null;
-  if (!res.ok || !json?.ok) throw new Error(json?.error?.message ?? "Haalo couldn't start the call. Please try again in a minute.");
+  if (!res.ok || !json?.ok) throw new Error(json?.error?.message ?? "Sneha couldn't start the call. Please try again in a minute.");
 }
 
 export async function addParent(p: NewParent, viewerId: string, viewerName: string): Promise<void> {

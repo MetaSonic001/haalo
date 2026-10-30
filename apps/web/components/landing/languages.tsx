@@ -81,7 +81,7 @@ export function Languages() {
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
         <h2 className="display max-w-2xl text-[31px] sm:text-[39px]">In the language they think in.</h2>
         <p className="prose-limit mt-4 text-lg text-muted">
-          Marathi, Hindi and Indian English today, with more on the way. Haalo follows how your parents actually talk, including the
+          Marathi, Hindi and Indian English today, with more on the way. Sneha follows how your parents actually talk, including the
           English words that slip in mid-sentence.
         </p>
       </div>

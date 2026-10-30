@@ -59,7 +59,7 @@ export default function CallDetail() {
             ))}
             <T muted size={13}>{`Ate: ${d.ate === true ? "yes" : d.ate === false ? "not yet" : "unclear"} · Sleep: ${d.slept}`}</T>
           </Card>
-          {([["Highlights", d.highlights, "No highlights this time."], ["Complaints", d.complaints, "None mentioned."], ["Haalo will follow up on", d.follow_ups, "Nothing to follow up."]] as const).map(([title, items, empty]) => (
+          {([["Highlights", d.highlights, "No highlights this time."], ["Complaints", d.complaints, "None mentioned."], ["Sneha will follow up on", d.follow_ups, "Nothing to follow up."]] as const).map(([title, items, empty]) => (
             <Card key={title} style={{ gap: 6 }}>
               <T weight="semi" size={18}>{title}</T>
               {items.length ? items.map((i) => <T key={i}>{`· ${i}`}</T>) : <T muted>{empty}</T>}
@@ -95,7 +95,7 @@ export default function CallDetail() {
                 return (
                   <View key={turn.id} style={{ alignItems: isParent ? "flex-end" : "flex-start" }}>
                     <View style={{ maxWidth: "88%", backgroundColor: isParent ? t.accent : t.bg, borderRadius: 14, paddingHorizontal: 12, paddingVertical: 8 }}>
-                      <T size={12} weight="semi" color={isParent ? t.onAccent : t.textMuted}>{isParent ? name : "Haalo"}</T>
+                      <T size={12} weight="semi" color={isParent ? t.onAccent : t.textMuted}>{isParent ? name : "Sneha"}</T>
                       <T color={isParent ? t.onAccent : t.text}>{translated ? (tt ?? "Translation not generated yet") : (turn.corrected_text ?? turn.text)}</T>
                     </View>
                   </View>

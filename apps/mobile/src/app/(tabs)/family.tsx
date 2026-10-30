@@ -12,7 +12,7 @@ import { config } from "@/lib/config";
 const PREFS: Array<[keyof Member["alert_prefs"], string, string]> = [
   ["emergency", "Emergencies and scams", "Falls, chest pain, distress, suspicious callers"],
   ["summary", "Daily summary", "A two-line note after each call"],
-  ["missed", "Missed calls", "When Haalo couldn't reach them two days running"],
+  ["missed", "Missed calls", "When Sneha couldn't reach them two days running"],
 ];
 
 export default function FamilyTab() {
@@ -84,7 +84,7 @@ export default function FamilyTab() {
           {invite ? (
             <>
               <T size={14} selectable>{url}</T>
-              <Button title="Share link" icon={Share2} variant="secondary" onPress={() => Share.share({ message: `Join our Haalo family circle: ${url}` })} />
+              <Button title="Share link" icon={Share2} variant="secondary" onPress={() => Share.share({ message: `Join our Sneha family circle: ${url}` })} />
               <Button title="Copy link" icon={Link2} variant="ghost" onPress={() => Clipboard.setStringAsync(url)} />
             </>
           ) : (

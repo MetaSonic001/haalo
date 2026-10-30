@@ -1,7 +1,21 @@
 # Progress Tracker
 
 ## Current Phase
-Built and running end to end on the owner's real Groq + Supabase accounts. Remaining work is external setup (Twilio number, Supabase Auth URLs, better STT/TTS providers) and product polish, listed below.
+Hackathon build (Symphony 2026 Abhyas buildathon, 15 Oct to 20 Nov 2026). Core product plus the care features below are built and verified on the owner's real Groq + Supabase accounts, with a public **demo workspace** (made-up family, real working features) and a scripted **demo video pipeline** (`tools/demo-video`). Remaining work is external setup (Twilio/Exotel number, Clerk-Supabase connection, better STT/TTS providers) and polish, listed below.
+
+## Care features (2026-10-25, verified live unless noted)
+- **Doses**: `dose_events` generated from `medicines.times` (`doses.py`); `CareEngine.tick` (scheduler) calls for due doses (a check-in due within 60 min asks instead), retries once after 20 min, marks missed after 90 min, notifies the family, escalates for `critical` medicines. Calls have a `purpose` (checkin | reminder | inbound | alert). Tools `confirm_dose`, `log_vital`, `request_family_help` run non-blocking (DB write in the background); the post-call safety net re-reads a reminder transcript if the model forgot the tool. Stock decrements on each taken dose; refill notice at 5 days left.
+- **Escalation ladder** (`escalation.py`): family push at once, then each contact by priority (alert call that reads the message + press 1, and SMS), waiting `ESCALATION_STEP_SECONDS`; stops on any acknowledgement (web, mobile, key press). Without a calling number the steps are recorded as `simulated` (never as sent). Triggers: emergency flag, N missed days, missed critical dose, parent asked for the family, manual test. Real conference-bridging is NOT built.
+- **Vitals** (`vitals.py`): spoken or photographed BP/sugar/weight/temperature/SpO2/pulse; alert thresholds are configurable per parent and are alerts, not diagnoses. **Photo proof**: `/p/<token>` page (no sign-in) -> vision model (Groq qwen) reads pill strips/BP monitors, marks the dose taken or saves the reading.
+- **Family messages** (note or question) are delivered on the next call in the parent's language; delivery is only recorded when the post-call analysis confirms it was said; the answer is stored. **Appointments**, **festival/birthday greetings** (only the family-chosen tradition, `holidays` package), **weekly insights + digest** (mood, talkativeness, sleep, meals, adherence, BP trend; wording is "worth a call", never a diagnosis).
+- **Web**: Medicines, Health, Safety, Messages, Calendar, Trends, Live demo pages; `/phone/<parent>` = "her phone" (rings when the family taps Call now, answer, live captions); landing page care-loop section.
+- **Mobile**: Medicines, Health, More (Safety, Messages, Trends, Calendar) screens; JSON API `/api/care/{data,act,ring}` shared with the website (Clerk bearer or the demo header). Demo build (`HAALO_DEMO_WORKSPACE_URL`) reads the demo family and shows an in-app banner for new notifications (stand-in for push).
+
+## Demo workspace and video
+- `DEMO_WORKSPACE=true` + `DEMO_FAMILY_ID`: `/demo` sets a cookie and opens the sandbox family (service-role client, every action guarded by `lib/guard.ts`; add-parent, invites, delete are blocked). Seed/reset: `uv run python -m haalo_voice.demo_seed` (also the "Reset data" button). Sandbox parents are `parents.is_demo` with fictional numbers; the scheduler never dials them.
+- Video: `tools/demo-video` (`prep.py` -> `record.mjs`; see its README). Playwright records the real apps; the parents' lines are synthesised speech injected as the microphone, so every call is a real WebRTC call. Output in `demo/`.
+- **Groq free tier limits (verified 2026-10-25)**: 8,000 tokens/minute and 200,000 tokens/day per model. One Sneha turn costs ~2.5-3k tokens, so heavy testing exhausts a model for the day. `QuotaAwareGroqLLM` falls back to `GROQ_MODEL_FALLBACK` on HTTP 429; the safety classifier runs on `openai/gpt-oss-20b` (separate quota). Real use needs Groq's paid Developer tier or another provider.
+- Whisper (Groq) transcribes the Edge-TTS Marathi lines imperfectly; STT hint words (`parent_context.vocab`) in the parent's script help a lot.
 
 ## What works (verified live, not just in tests)
 - Hosted Supabase project `doxwfizatdedzvstjast`: both migrations applied (`pnpm db:apply`), RLS on every table, service key + public key verified, anon locked out of data and scheduler RPCs.
@@ -11,15 +25,25 @@ Built and running end to end on the owner's real Groq + Supabase accounts. Remai
 - Interruption fix: barge-in needs `BARGE_IN_MIN_WORDS` (3) words while the agent speaks (`MinWordsUserTurnStartStrategy`); stricter Silero VAD (`VAD_CONFIDENCE`, `VAD_MIN_VOLUME`, `VAD_START_SECS`); junk-transcript filter (Whisper hallucinations on noise); opening/consent line cannot be interrupted by noise.
 - Tests: 47 voice (pytest, incl. full pipeline wiring), 15 RLS on PGlite, 24 web E2E, 7 web unit, 31 shared/tokens, expo-doctor 21/21, Android bundle exports.
 
+## Auth is now Clerk (web + mobile); Supabase holds data only
+- Web: `@clerk/nextjs` (`proxy.ts` clerkMiddleware protects /app, /admin, /invite; `<SignIn>` at /login; `ClerkProvider` in the root layout only when keys exist). Mobile: `@clerk/expo` with email-code sign-in/sign-up and Google SSO (custom screens, works in Expo Go).
+- Data access: the Clerk session token is passed to Supabase as the access token (`createClient(..., { accessToken })`), so RLS sees the user via `auth.jwt() ->> 'sub'`. Clerk ids are text (`user_...`), so migration `20260930000003_clerk_user_ids.sql` (applied) converted every user column to text and rewrote all policies around `requesting_user_id()`. `profiles` rows are created on first sign-in (`ensureProfile`) or by `create_family`.
+- Mobile "Call now" sends the Clerk token as Bearer to web `/api/calls/now`; Clerk middleware authenticates it.
+- Demo mode: no Clerk keys = demo data locally; production refuses.
+- Admin = Clerk user public metadata `{"is_admin": true}` (web checks it server-side). For RLS admin policies add the session-token claim `{"app_metadata": {"is_admin": "{{user.public_metadata.is_admin}}"}}`.
+- **Owner steps still required for live data under RLS** (verified 2026-10-25: a Clerk-issued token is rejected by Supabase with PGRST301 "No suitable key", so these are not done yet): (1) Clerk dashboard > Integrations/"Connect with Supabase" > activate (adds `role: authenticated` to session tokens); (2) Supabase > Authentication > Third-Party Auth > add Clerk with domain `pleasant-beagle-45.clerk.accounts.dev`. Then (3) in Clerk, set Public metadata `{"is_admin": true}` on your own user. Google sign-in in Clerk dev instances works out of the box.
+- The earlier Supabase Auth OAuth-server app is unrelated and can be deleted.
+
 ## Mobile fixes (2026-09-30, from the owner's Expo Go run)
 - `expo-notifications` throws at import in Expo Go on Android (SDK 53+); that cascaded into "missing default export" and "ErrorBoundary of undefined". It is now required lazily and only where supported (`lib/notifications.ts`, `pushSupported`); push needs a development build.
 - `useFamily outside FamilyProvider`: Settings and Add-parent are root modal routes; `FamilyProvider` moved to the root layout. Add-parent refreshes the family after saving.
 - `localhost` URLs are swapped for the Metro host IP on devices (`config.reachable`), so Call now / voice previews reach the computer.
 - Dev password sign-in on the mobile sign-in screen (`__DEV__` only). Skia orb has a plain View fallback on web; Skia style flattened.
+- 2026-10-25: Orb crashed with "[Worklets] Tried to synchronously call a remote function": a plain JS closure ran from `withRepeat`'s UI-runtime completion callback; now a worklet touching only shared values. `GO_BACK was not handled`: all back buttons use `goBack()` (`lib/nav.ts`, falls back to the tabs). `expo-doctor` 21/21 after `expo install --fix` and pinning `@expo/metro-runtime ~57.0.17`.
 - Verified: typecheck, Android bundle export, and the app rendering sign-in and welcome screens at runtime on the web target. NOT verified on a real phone.
 
 ## Supabase Auth (owner action; only email provider is enabled today)
-- The "OAuth Server" app in the Supabase dashboard is the wrong feature (it lets other apps sign in *with* Haalo accounts). Google sign-in needs Authentication > Providers > Google with a Google Cloud OAuth client (callback `https://doxwfizatdedzvstjast.supabase.co/auth/v1/callback`).
+- The "OAuth Server" app in the Supabase dashboard is the wrong feature (it lets other apps sign in *with* Sneha accounts). Google sign-in needs Authentication > Providers > Google with a Google Cloud OAuth client (callback `https://doxwfizatdedzvstjast.supabase.co/auth/v1/callback`).
 - Authentication > URL Configuration: Site URL `http://localhost:3000`; Redirect URLs `http://localhost:3000/auth/callback`, `haalo://**`, and `exp://**` (Expo Go).
 
 ## Known gaps and what is left (feature-wise)
@@ -44,3 +68,15 @@ Built and running end to end on the owner's real Groq + Supabase accounts. Remai
 - Restart both servers after any `.env` change (Next reads env at boot; voice too). Voice logs never include local-variable dumps (`diagnose=False`) and mask phone numbers/emails.
 - Secrets were pasted into chat by the owner during setup: rotate the Supabase secret key, DB password, Groq key and Twilio auth token before going public.
 - The owner asked not to over-invest in tests: keep them proportionate, focus on the product.
+
+## Brand + demo shoot (2026-10-25)
+- Product = **Heartline**; the AI voice agent = **Sneha**. Every call opens with "I'm Sneha from Heartline, calling on behalf of <child>" (scripted greeting/consent in all 10 languages; reminder and inbound prompts too). Internal identifiers keep `haalo` (`@haalo/*`, `haalo_voice`, `x-haalo-demo`, bundle id).
+- Demo voices: Sneha = the language's female Edge voice; parents never share it (women: same voice, -22 Hz, 14% slower; men: male voice).
+- Voice service fixes found while filming: post-call work now runs even if the pipeline hangs after hang-up (6 s grace, then cancel); `FamilyMessageNudge` makes sure the family's note and question are passed on (from the parent's second turn); prompt orders messages before appointments/refills.
+- Recording flow (headless Playwright, call audio mixed afterwards): `TAKE=<n> ONLY=<scenes> node tools/demo-video/record.mjs`; run the voice service with BARGE_IN_MIN_WORDS=99 DEFAULT_SILENCE_MS=1700 NO_RESPONSE_SECONDS=45 so nobody is cut off. `assemble.mjs pitch` cuts `plans/pitch.json` (supports `zoom: [scale, cx, cy]` eased push-ins) into `demo/heartline-pitch.mp4` (2:49) and `demo/VOICEOVER-pitch.md`.
+- Groq free tier: 200k tokens/day per model and 1000 requests/day; one full shoot uses most of it.
+
+## Final demo cut (2026-10-26)
+- `demo/Final/final-heartline-demo.mp4` (about 3:30) = the 2:49 pitch extended: a languages beat, the Tamil call with Sneha's reply (the old pitch cut off before it; the audio was always in `take1`, at 392-399 s), Safety + alert history and the Family page from the photo/web footage. Built by `node tools/demo-video/assemble.mjs final` from `plans/final.json`; script in `demo/Final/VOICEOVER-final-heartline-demo.md` (the owner records the voice-over later).
+- `assemble.mjs` sources can set `audioFromFile` (use a finished video's own soundtrack): the pitch's raw `t2-morning`/`t3`/`t4` recordings are no longer on disk, so the unchanged parts are re-cut from `heartline-pitch.mp4`.
+- `cap-export.mp4` and `run1.mp4` are the OLD "Haalo"-branded shoot (UI and Sneha's speech say Haalo); do not splice them into Heartline videos. They add nothing the new cut lacks.

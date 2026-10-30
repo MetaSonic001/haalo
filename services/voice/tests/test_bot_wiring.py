@@ -126,7 +126,7 @@ async def _drive(monkeypatch, language: str, utterance: str | None, consent_pend
 
 async def test_pipeline_boots_speaks_greeting_and_cleans_up(monkeypatch):
     transport, store, session, llm, status = await _drive(monkeypatch, "mr", None)
-    assert any("हालो" in s for s in transport.out.spoken), transport.out.spoken  # scripted Marathi greeting
+    assert any("स्नेहा" in s for s in transport.out.spoken), transport.out.spoken  # scripted Marathi greeting
     assert store.finished, "finish_call must run on disconnect"
     assert {"record_consent", "set_preference", "end_call"} <= set(llm.functions)
     assert session.stt_provider == "fake_stt" and session.tts_provider == "fake_tts"

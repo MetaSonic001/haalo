@@ -10,6 +10,7 @@ import { FamilyProvider } from "@/lib/family";
 import { SessionProvider, useSession } from "@/lib/session";
 import { ThemeProvider, useTheme } from "@/lib/theme";
 import { useNotificationRouting } from "@/lib/notifications";
+import { NotificationBanner } from "@/components/banner";
 
 SplashScreen.preventAutoHideAsync().catch(() => {});
 
@@ -23,6 +24,7 @@ function Shell() {
   return (
     <>
       <StatusBar style={scheme === "dark" ? "light" : "dark"} />
+      <NotificationBanner />
       <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: t.bg }, animation: "slide_from_right" }}>
         <Stack.Screen name="settings" options={{ presentation: "modal", animation: "slide_from_bottom" }} />
         <Stack.Screen name="add-parent" options={{ presentation: "modal", animation: "slide_from_bottom", gestureEnabled: false }} />

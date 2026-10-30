@@ -8,8 +8,8 @@ const steps = [
   },
   {
     icon: PhoneCall,
-    title: "Haalo calls every day",
-    body: "A warm, unhurried call on her ordinary phone. Nothing to install. The first call introduces Haalo as an AI assistant and asks her permission.",
+    title: "Sneha calls every day",
+    body: "A warm, unhurried call on her ordinary phone. Nothing to install. The first call introduces Sneha as an AI assistant and asks her permission.",
   },
   {
     icon: HeartPulse,

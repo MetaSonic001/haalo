@@ -46,7 +46,7 @@ export function MorningSummary() {
 
         <div className="mx-auto w-full max-w-md">
           <motion.div {...pop(0)} className="mx-auto flex w-fit items-center gap-2 rounded-full bg-morning/10 px-4 py-2 text-sm backdrop-blur">
-            <Phone className="size-4 text-marigold" /> 9:00 am · Haalo called Aai · 6 min
+            <Phone className="size-4 text-marigold" /> 9:00 am · Sneha called Aai · 6 min
           </motion.div>
 
           <svg viewBox="0 0 8 72" className="mx-auto block h-[72px] w-2" aria-hidden>
@@ -70,12 +70,12 @@ export function MorningSummary() {
               <LogoMark className="size-9" />
               <div className="flex-1 leading-tight">
                 <p className="font-semibold">Aai&apos;s call today</p>
-                <p className="text-sm text-morning/85">Haalo · 9:07 am</p>
+                <p className="text-sm text-morning/85">Sneha · 9:07 am</p>
               </div>
             </header>
             <p className="mt-4 text-[17px] leading-relaxed">
               Aai sounded cheerful and took her BP tablet. She went to the temple with Shobha kaku. Her knee was a little sore in the
-              evening, so Haalo will ask again tomorrow.
+              evening, so Sneha will ask again tomorrow.
             </p>
             <div className="mt-4 flex flex-wrap gap-2">
               <motion.span {...pop(0.45)} className="inline-flex items-center gap-1.5 rounded-full bg-[#DDF0E4] px-3 py-1 text-sm font-medium text-[#2B6B44]">

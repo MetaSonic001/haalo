@@ -1,4 +1,4 @@
-# Haalo voice service
+# Heartline voice (agent: Sneha) service
 
 Pipecat cascade: `Transport -> Silero VAD -> STT -> safety -> context -> Groq LLM (streaming) -> TTS -> Transport`.
 Transports: SmallWebRTC (browser demo / dev) and Twilio Media Streams (phone). Exotel/Plivo plug into the same `TelephonyProvider` interface.

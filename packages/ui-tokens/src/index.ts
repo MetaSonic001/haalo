@@ -1,5 +1,5 @@
 /**
- * Haalo design tokens. Single source for web (CSS variables) and mobile (RN theme).
+ * Heartline design tokens. Single source for web (CSS variables) and mobile (RN theme).
  * Direction: "Morning call, Indian home". Calm morning light, indigo block-print ink, marigold diya glow.
  */
 

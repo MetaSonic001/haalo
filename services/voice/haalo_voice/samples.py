@@ -19,7 +19,7 @@ async def sample_audio(s: Settings, lang: Language, gender: str = "female") -> t
     key = (provider, lang.code, gender)
     if key in _cache:
         return _cache[key]
-    text = lang.say("greeting", honorific=lang.default_honorific)
+    text = lang.say("greeting", honorific=lang.default_honorific, child="Riya")
 
     if provider == "edge":
         if s.is_production or not s.dev_only:

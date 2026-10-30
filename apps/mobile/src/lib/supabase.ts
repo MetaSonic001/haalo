@@ -12,4 +12,4 @@ export function setTokenGetter(fn: (() => Promise<string | null>) | null) {
 }
 export const accessToken = async () => (tokenGetter ? tokenGetter() : null);
 
-export const supabase = config.demo ? null : createClient(config.supabaseUrl, config.supabaseKey, { accessToken });
+export const supabase = config.demo || config.workspace ? null : createClient(config.supabaseUrl, config.supabaseKey, { accessToken });

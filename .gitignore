@@ -18,3 +18,16 @@ services/voice/evals/out
 expo-env.d.ts
 next-env.d.ts
 e2e-real/out
+
+# demo video outputs and generated inputs (re-create with tools/demo-video)
+demo/.raw
+demo/mobile-web
+demo/*.mp4
+demo/*.log
+tools/demo-video/audio
+tools/demo-video/state.json
+
+deck/node_modules/
+deck/render/
+
+/demo

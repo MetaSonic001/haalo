@@ -85,7 +85,7 @@ export default function Settings() {
           <Card style={{ gap: 8, marginBottom: 16 }}>
             <T weight="semi" size={20}>Permission</T>
             <T>{parent.consent_status === "granted" ? `${who} agreed on the first call` : parent.consent_status === "declined" ? `${who} declined the calls` : "Waiting for the first call"}</T>
-            <T muted size={13}>Recordings are off by default. Haalo keeps text transcripts only.</T>
+            <T muted size={13}>Recordings are off by default. Sneha keeps text transcripts only.</T>
           </Card>
         </>
       ) : null}

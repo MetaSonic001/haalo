@@ -58,7 +58,7 @@ async def _chat(model: str, messages: list[dict], tools: list | None = None, max
 async def parent_reply(lang_code: str, sc: Scenario, transcript: list[tuple[str, str]]) -> str:
     who, speaks = PARENT_PERSONAS.get(lang_code, PARENT_PERSONAS["en"])
     system = (
-        f"You are role-playing {who}, on a phone call with an AI assistant called Haalo. Speak {speaks}. Reply in ONE or TWO short spoken sentences, "
+        f"You are role-playing {who}, on a phone call with an AI assistant called Sneha. Speak {speaks}. Reply in ONE or TWO short spoken sentences, "
         f"no stage directions. Scenario: {sc.behaviour}"
     )
     msgs = [{"role": "system", "content": system}]
@@ -128,7 +128,7 @@ async def run_one(lang_code: str, sc: Scenario) -> dict:
         res["consent_ok"] = consent == sc.expect_consent
     # summary accuracy
     if sc.expect_summary and transcript and not sc.silent:
-        body = "\n".join(f"{'PARENT' if s_ == 'parent' else 'HAALO'}: {t}" for s_, t in transcript)
+        body = "\n".join(f"{'PARENT' if s_ == 'parent' else 'SNEHA'}: {t}" for s_, t in transcript)
         summary = await chat_json(S, S.groq_model_summary, SUMMARY_SYSTEM.replace("{family_language}", "English"),
                                   f"Parent: Demo. Language: {lang.name}. Medicines expected: BP tablet.\n\nTRANSCRIPT:\n{body}", max_tokens=900)
         ok, total = summary_accuracy(summary, sc.expect_summary)

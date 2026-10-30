@@ -62,7 +62,7 @@ export default async function CallDetail({ params }: { params: Promise<{ id: str
           <Panel title="Complaints">
             <List items={d.complaints} empty="None mentioned." />
           </Panel>
-          <Panel title="Haalo will follow up on">
+          <Panel title="Sneha will follow up on">
             <List items={d.follow_ups} empty="Nothing to follow up." />
           </Panel>
         </div>

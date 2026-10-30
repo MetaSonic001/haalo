@@ -7,7 +7,7 @@ Light and dark. Content left-aligned. Almost no shadows (contrast + spacing sepa
 no eyebrow labels, no arrow glyphs on buttons.
 Modern touches (owner asked for modern and unique): soft aurora/grain gradient behind the orb, bento grid for features,
 spotlight-border only on feature/pricing cards, animated beam from "call" to "summary", script marquee for languages.
-One signature element: the Haalo orb.
+One signature element: the Sneha orb.
 
 ## Colors (source: `packages/ui-tokens`; web = CSS variables, mobile = theme object)
 

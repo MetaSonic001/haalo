@@ -87,7 +87,7 @@ export function Waitlist() {
                 {state === "sending" ? <Loader2 className="size-5 animate-spin" /> : null}
                 Join the waitlist
               </Button>
-              <p className="text-sm text-muted">No spam. We only use this to contact you about Haalo.</p>
+              <p className="text-sm text-muted">No spam. We only use this to contact you about Heartline.</p>
             </form>
           )}
         </div>

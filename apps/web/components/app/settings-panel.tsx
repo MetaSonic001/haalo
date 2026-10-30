@@ -77,7 +77,7 @@ export function SettingsPanel({ parent, schedule }: { parent: Parent; schedule: 
         <div className="mt-4 flex items-center gap-4 rounded-row bg-bg px-4 py-3">
           <div className="flex-1">
             <p className="font-medium">Keep call recordings</p>
-            <p className="text-sm text-muted">Off by default. Only turn on if {name} has agreed. Otherwise Haalo keeps text transcripts only.</p>
+            <p className="text-sm text-muted">Off by default. Only turn on if {name} has agreed. Otherwise Sneha keeps text transcripts only.</p>
           </div>
           <button
             role="switch"

@@ -43,7 +43,7 @@ export function Orb({ size, state = "idle", level, className, label }: OrbProps)
   return (
     <div
       role="img"
-      aria-label={label ?? "The Haalo orb"}
+      aria-label={label ?? "The Sneha orb"}
       className={cn("relative isolate aspect-square", className)}
       style={size ? { width: size, height: size } : undefined}
     >

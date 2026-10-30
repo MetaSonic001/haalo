@@ -118,7 +118,7 @@ body {
   *, *::before, *::after { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; }
 }
 
-/* ---------------------------------------------------------------- Haalo orb */
+/* ---------------------------------------------------------------- Sneha orb */
 @keyframes ring-out {
   0% { transform: scale(0.62); opacity: 0.7; }
   100% { transform: scale(1.38); opacity: 0; }

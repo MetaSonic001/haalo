@@ -93,6 +93,18 @@ class Settings(BaseSettings):
     call_retry_minutes: int = 15
     call_max_retries: int = 2
 
+    # Care features
+    dose_remind_retry_minutes: int = 20  # a reminder is repeated this long after the first if the dose is still unconfirmed
+    dose_max_reminders: int = 2
+    dose_missed_after_minutes: int = 90  # unconfirmed this long after the due time = missed (family is told)
+    dose_fold_into_checkin_minutes: int = 60  # a daily check-in due this soon asks about the dose instead of a separate call
+    escalation_step_seconds: int = 300  # wait for an acknowledgement before the next contact is tried
+    escalation_missed_days: int = 2  # this many consecutive unanswered days start the escalation ladder
+    groq_model_vision: str = ""  # photo proofs; defaults to the conversation model when it accepts images
+    proof_max_bytes: int = 6_000_000
+    demo_workspace: bool = False  # lets the web demo workspace talk to its sandbox parents over WebRTC (never real parents)
+    demo_family_id: str = ""
+
     # Demo protection
     turnstile_secret: str = ""
     demo_max_seconds: int = 180
